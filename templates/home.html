@@ -1,0 +1,130 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GeoJam</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #F2F2F2; margin: 0; padding: 0;">
+    <header style="background-color: #333; height: 50px; display: flex; align-items: center; padding-left: 10px; position: fixed; top: 0; width: 100%;">
+        <h1 style="color: white; margin-right: 10px;">Geojam by Mermedata</h1>
+        <h2 style="color: white; font-size: 0.8rem;">Download your Google Maps search</h2>
+    </header>
+
+    <main style="padding: 70px 40px;">
+        <form>
+            <div style="display: flex; justify-content: space-between;">
+                <div style="flex: 1;">
+                    <label for="keywords">Enter search keywords:</label>
+                    <input type="text" id="keywords" name="keywords" style="width: 90%; margin-bottom: 10px;">
+                    <br><br>
+                    <small>Type the point of interest you are looking for (ie. McDonalds)</small>
+                    <br><br>
+
+                    <h3>Geo-Centering</h3>
+                    <label for="lat">Enter Latitude:</label>
+                    <input type="text" id="lat" name="lat" style="width: 90%;" oninput="updateGeocenter();">
+                    <br><br>
+
+                    <label for="lng">Enter Longitude:</label>
+                    <input type="text" id="lng" name="lng" style="width: 90%;" oninput="updateGeocenter();">
+                </div>
+
+                <div style="flex: 1;">
+                  <label for="radius">Enter the search radius from the center (In Meters):</label>
+                  <input type="text" id="radius" name="radius" style="width: 90%;" oninput="updateRadius();">
+                  <br><br>
+                  <small>Input the radius from the center to conduct the search of POIs - needs to be expressed in Meters</small>
+                  <br><br>
+
+                  <div id="map-container" style="height: 400px; width: 100%;"></div>
+              </div>
+          </div>
+
+          <hr style="margin-top: 5px;">
+          <div style="text-align: center; margin: 5px;">
+              <input type="submit" value="Submit values and generate table!" style="background-color: #333; color: white; border: none; padding: 10px 20px; cursor: pointer;">
+          </div>
+          <hr style="margin-bottom: 5px;">
+
+          <p style="text-align: center; margin-top: 100px;">This website is fully Google API compliant and is not a scraping service. The code has been made with the help of ChatGPT.</p>
+      </form>
+  </main>
+
+  
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0KLATkK9lTyDwyAZjA16NPzg320P_hIQ&callback=initMap" async defer></script>
+  <script>
+      let map;
+      let circle;
+  
+      function initMap() {
+          const mapOptions = {
+              zoom: 8,
+              center: new google.maps.LatLng(0, 0),
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+          map = new google.maps.Map(document.getElementById("map-container"), mapOptions);
+          circle = new google.maps.Circle({
+              map: map,
+              center: map.getCenter(),
+              radius: 0,
+              strokeColor: "#FF0000",
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: "#FF0000",
+              fillOpacity: 0.35
+          });
+          locateUser();
+      }
+  
+      function locateUser() {
+          if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(function(position) {
+                  const userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                  map.setCenter(userLocation);
+                  circle.setCenter(userLocation);
+              }, function() {
+                  // Handle geolocation errors here, e.g., user denied permission
+              });
+          } else {
+              // Browser doesn't support Geolocation
+          }
+      }
+  
+      function updateGeocenter() {
+        const lat = parseFloat(document.getElementById("lat").value);
+        const lng = parseFloat(document.getElementById("lng").value);
+        if (!isNaN(lat) && !isNaN(lng)) {
+          const newCenter = new google.maps.LatLng(lat, lng);
+          map.setCenter(newCenter);
+          circle.setCenter(newCenter);
+          
+          // Add a marker at the new center
+          const marker = new google.maps.Marker({
+            position: newCenter,
+            map: map,
+            title: "Geo center",
+            icon: {
+              url: "https://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+              scaledSize: new google.maps.Size(40, 40), // added
+              anchor: new google.maps.Point(20, 40) // added
+            }
+          });
+        }
+      }
+      
+      
+  
+      function updateRadius() {
+          const radius = parseFloat(document.getElementById("radius").value);
+          if (!isNaN(radius)) {
+              circle.setRadius(radius);
+          }
+      }
+  </script>
+  
+
+
+  
+</body>
+</html>
