@@ -1,18 +1,61 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>GeoJam</title>
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #F2F2F2; margin: 0; padding: 0;">
+
+
+    {% if results %}
+    <h2>Search Results</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th>Rating</th>
+          <th>Distance (meters)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for result in results %}
+          <tr>
+            <td>{{ result.name }}</td>
+            <td>{{ result.address }}</td>
+            <td>{{ result.latitude }}</td>
+            <td>{{ result.longitude }}</td>
+            <td>{{ result.rating }}</td>
+            <td>{{ result.distance }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  
+
+
+
+
     <header style="background-color: #333; height: 50px; display: flex; align-items: center; padding-left: 10px; position: fixed; top: 0; width: 100%;">
         <h1 style="color: white; margin-right: 10px;">Geojam by Mermedata</h1>
         <h2 style="color: white; font-size: 0.8rem;">Download your Google Maps search</h2>
     </header>
 
     <main style="padding: 70px 40px;">
-        <form>
+        <for mmethod="POST" action="{% url 'search' %}">
+        {% csrf_token %}
+
+
+
+
+
+
+
+
+
+
             <div style="display: flex; justify-content: space-between;">
                 <div style="flex: 1;">
                     <label for="keywords">Enter search keywords:</label>
@@ -37,8 +80,22 @@
                   <small>Input the radius from the center to conduct the search of POIs - needs to be expressed in Meters</small>
                   <br><br>
 
-                  <div id="map-container" style="height: 400px; width: 100%;"></div>
+                  <div id="map-container" style="height: 400px; width: 100%;">
+
+                </div>
+
+
+
+
+
+
+                
               </div>
+
+
+
+
+              
           </div>
 
           <hr style="margin-top: 5px;">
@@ -50,6 +107,23 @@
           <p style="text-align: center; margin-top: 100px;">This website is fully Google API compliant and is not a scraping service. The code has been made with the help of ChatGPT.</p>
       </form>
   </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0KLATkK9lTyDwyAZjA16NPzg320P_hIQ&callback=initMap" async defer></script>

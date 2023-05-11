@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Google Maps Search</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Search</button>
+  </form>
+
+  {% if results %}
+    <h2>Search Results</h2>
+    <table>
+        <!-- table content -->
+    </table>
+
+    <!-- Add the "Download CSV" button here -->
+    <a href="{% url 'download_csv' %}?query={{ form.cleaned_data.query|urlencode }}&latitude={{ form.cleaned_data.lat }}&longitude={{ form.cleaned_data.lng }}&radius={{ form.cleaned_data.radius }}" class="btn btn-primary">Download CSV</a>
+  {% endif %}
+{% endblock %}
