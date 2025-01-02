@@ -16,7 +16,7 @@ st.sidebar.title("GeoJam App")
 st.sidebar.write("Your Location-Based Search Tool")
 
 # Add a placeholder for the logo (use your own logo file here)
-st.sidebar.image("https://via.placeholder.com/150", use_column_width=True)  # Replace with your logo URL or file path
+st.sidebar.image("https://via.placeholder.com/150", use_container_width=True)  # Updated here
 
 # Sidebar Inputs
 st.sidebar.subheader("Enter Search Parameters")
