@@ -7,6 +7,13 @@ from geopy.distance import distance
 st.title("GeoJam Contextualization Tool")
 st.write("Search for places using the Google Places API and visualize results!")
 
+# Initialize session state variables
+if "results" not in st.session_state:
+    st.session_state.results = None
+
+if "action" not in st.session_state:
+    st.session_state.action = "Search"
+
 # API Key Selection
 st.subheader("API Key Selection")
 api_choice = st.radio(
@@ -46,7 +53,7 @@ except ValueError:
     st.stop()
 
 # Search Button
-if st.button("Search"):
+if st.session_state.action == "Search" and st.button("Search"):
     # Set up API endpoint and parameters
     endpoint = "https://maps.googleapis.com/maps/api/place/textsearch/json"
     params = {
@@ -90,45 +97,46 @@ if st.button("Search"):
                 }
             )
 
-    # Display results in a table
-    if results:
-        st.write(f"Found {len(results)} results within {radius} meters:")
-        st.table(results)
+    # Save results to session state
+    st.session_state.results = results
+    st.session_state.action = "Results"
 
-        # Provide options for the next action
-        st.subheader("What would you like to do next?")
-        action = st.radio(
-            "Choose an option:",
-            ("New Search", "Save Results as CSV", "Quit"),
-        )
+# Display Results
+if st.session_state.action == "Results" and st.session_state.results:
+    results = st.session_state.results
+    st.write(f"Found {len(results)} results within {radius} meters:")
+    st.table(results)
 
-        if action == "New Search":
-            # Clear session state and restart app
-            for key in st.session_state.keys():
-                del st.session_state[key]
-            st.experimental_rerun()  # Restart the app
+    # Provide options for the next action
+    st.subheader("What would you like to do next?")
+    action = st.radio(
+        "Choose an option:",
+        ("New Search", "Save Results as CSV", "Quit"),
+    )
 
-        elif action == "Save Results as CSV":
-            filename = st.text_input("Enter a filename for the CSV (without extension):", "results")
-            if st.button("Save CSV"):
-                # Convert results to a DataFrame
-                results_df = pd.DataFrame(results)
+    if action == "New Search":
+        # Clear session state to restart
+        st.session_state.results = None
+        st.session_state.action = "Search"
 
-                # Convert DataFrame to CSV as bytes
-                csv = results_df.to_csv(index=False).encode('utf-8')
+    elif action == "Save Results as CSV":
+        filename = st.text_input("Enter a filename for the CSV (without extension):", "results")
+        if st.button("Save CSV"):
+            # Convert results to a DataFrame
+            results_df = pd.DataFrame(results)
 
-                # Provide the file for download
-                st.download_button(
-                    label="Download CSV",
-                    data=csv,
-                    file_name=f"{filename}.csv",
-                    mime="text/csv",
-                )
-                st.success(f"Results saved as {filename}.csv!")
+            # Convert DataFrame to CSV as bytes
+            csv = results_df.to_csv(index=False).encode('utf-8')
 
-        elif action == "Quit":
-            st.info("Thank you for using GeoJam! The app has stopped.")
-            st.stop()
+            # Provide the file for download
+            st.download_button(
+                label="Download CSV",
+                data=csv,
+                file_name=f"{filename}.csv",
+                mime="text/csv",
+            )
+            st.success(f"Results saved as {filename}.csv!")
 
-    else:
-        st.warning("No results found within the specified radius.")
+    elif action == "Quit":
+        st.info("Thank you for using GeoJam! The app has stopped.")
+        st.stop()
