@@ -65,20 +65,20 @@ if st.button("Search"):
         st.error(f"API Error: {data['error_message']}")
         st.stop()
 
-    # Display Results
+    # Process Results
     st.subheader("Results")
-    if "results" in data and len(data["results"]) > 0:
-        results = []
-        for result in data["results"]:
-            name = result["name"]
-            address = result.get("formatted_address", "N/A")
-            latitude = result["geometry"]["location"]["lat"]
-            longitude = result["geometry"]["location"]["lng"]
-            rating = result.get("rating", "N/A")
-            place_loc = (latitude, longitude)
-            dist_m = distance(location, place_loc).meters
+    results = []
+    for result in data.get("results", []):
+        name = result["name"]
+        address = result.get("formatted_address", "N/A")
+        latitude = result["geometry"]["location"]["lat"]
+        longitude = result["geometry"]["location"]["lng"]
+        rating = result.get("rating", "N/A")
+        place_loc = (latitude, longitude)
+        dist_m = distance(location, place_loc).meters
 
-            # Add result to list
+        # Filter results within the specified radius
+        if dist_m <= radius:
             results.append(
                 {
                     "Name": name,
@@ -90,15 +90,27 @@ if st.button("Search"):
                 }
             )
 
-        # Display results in a table
+    # Display results in a table
+    if results:
+        st.write(f"Found {len(results)} results within {radius} meters:")
         st.table(results)
 
-        # Save to CSV Button
-        if st.button("Save Results to CSV"):
-            with open("results.csv", "w", newline="") as f:
-                writer = csv.DictWriter(f, fieldnames=results[0].keys())
-                writer.writeheader()
-                writer.writerows(results)
-            st.success("Results saved to results.csv!")
+        # Options: New Search, Save, or Quit
+        action = st.radio("What would you like to do next?", ("New Search", "Save to CSV", "Quit"))
+
+        if action == "New Search":
+            st.experimental_rerun()  # Restarts the app
+
+        elif action == "Save to CSV":
+            filename = st.text_input("Enter a filename for the CSV (without extension):", "results")
+            if st.button("Save"):
+                with open(f"{filename}.csv", "w", newline="") as f:
+                    writer = csv.DictWriter(f, fieldnames=results[0].keys())
+                    writer.writeheader()
+                    writer.writerows(results)
+                st.success(f"Results saved to {filename}.csv!")
+
+        elif action == "Quit":
+            st.stop()
     else:
-        st.warning("No results found for your query.")
+        st.warning("No results found within the specified radius.")
