@@ -103,6 +103,9 @@ if st.button("Search"):
         )
 
         if action == "New Search":
+            # Clear session state and restart app
+            for key in st.session_state.keys():
+                del st.session_state[key]
             st.experimental_rerun()  # Restart the app
 
         elif action == "Save Results as CSV":
