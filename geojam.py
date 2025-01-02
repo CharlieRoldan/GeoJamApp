@@ -1,9 +1,7 @@
 import streamlit as st
 import requests
-import csv
 import pandas as pd
 from geopy.distance import distance
-from io import StringIO
 
 # Streamlit Title
 st.title("GeoJam Contextualization Tool")
@@ -100,11 +98,10 @@ if st.button("Search"):
         # Convert results to a DataFrame
         results_df = pd.DataFrame(results)
 
-        # Provide Download Option for CSV
-        csv = StringIO()
-        results_df.to_csv(csv, index=False)
-        csv.seek(0)
+        # Convert DataFrame to CSV as bytes
+        csv = results_df.to_csv(index=False).encode('utf-8')
 
+        # Provide Download Option for CSV
         st.download_button(
             label="Download Results as CSV",
             data=csv,
