@@ -17,7 +17,7 @@ while True:
     if api_choice == "1":
         password = input("Enter the GeoJam password: ").strip()
         if password == "GEOJAM":
-            api_key = "AIzaSyBZ1oNBc74mCBB3Mc161f4CVHWorxV5iaA"
+            api_key = "NoCode"
             print("\nPassword correct. Using GeoJam's API key.")
             break
         else:
