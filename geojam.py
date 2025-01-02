@@ -3,14 +3,10 @@ import requests
 import pandas as pd
 from geopy.distance import distance
 
+
 # Initialize session state variables
 if "log" not in st.session_state:
     st.session_state["log"] = {}
-if "results" not in st.session_state:
-    st.session_state.results = None
-
-
-# Initialize session state variables
 if "results" not in st.session_state:
     st.session_state.results = None
 
@@ -54,6 +50,13 @@ if st.button("Run Search"):
         # Validate location
         location = tuple(map(float, location_str.split(",")))
 
+        # Save inputs to log
+        st.session_state["log"] = {
+            "query": query,
+            "location": location,
+            "radius": radius,
+        }
+
         # Call Google Maps API
         endpoint = "https://maps.googleapis.com/maps/api/place/textsearch/json"
         params = {
@@ -81,7 +84,6 @@ if st.button("Run Search"):
             place_loc = (latitude, longitude)
             dist_m = distance(location, place_loc).meters
 
-            # Filter results within the specified radius
             if dist_m <= radius:
                 results.append(
                     {
@@ -97,14 +99,6 @@ if st.button("Run Search"):
         # Save results to session state
         st.session_state.results = results
 
-        # Display Results
-        if results:
-            st.write(f"Found {len(results)} results:")
-            st.table(results)
-
-        else:
-            st.warning("No results found within the specified radius.")
-
     except ValueError:
         st.error("Invalid location format. Please enter as latitude,longitude.")
 
@@ -112,10 +106,10 @@ if st.button("Run Search"):
 if st.session_state.results:
     # Display Query Details
     st.subheader("Query Details")
-    log = st.session_state.log
-    st.write("**Search Query**:", log.get("query"))
-    st.write("**Location**:", log.get("location"))
-    st.write("**Radius**:", f"{log.get('radius')} meters")
+    log = st.session_state["log"]
+    st.write("**Search Query**:", log.get("query", "N/A"))
+    st.write("**Location**:", log.get("location", "N/A"))
+    st.write("**Radius**:", f"{log.get('radius', 'N/A')} meters")
 
     # Display Results Table
     st.subheader("Search Results")
