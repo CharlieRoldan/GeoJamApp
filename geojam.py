@@ -3,6 +3,12 @@ import requests
 import pandas as pd
 from geopy.distance import distance
 
+# Initialize session state variables
+if "log" not in st.session_state:
+    st.session_state["log"] = {}
+if "results" not in st.session_state:
+    st.session_state.results = None
+
 
 # Initialize session state variables
 if "results" not in st.session_state:
