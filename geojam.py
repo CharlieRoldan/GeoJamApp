@@ -23,36 +23,34 @@ st.markdown(
     [data-testid="stSidebar"] .stTextInput, 
     [data-testid="stSidebar"] .stSelectbox,
     [data-testid="stSidebar"] .stRadio {
-        color: #333333; /* Dark grey text for readability */
+        color: #000000; /* Black text */
         background-color: #ffffff; /* White background for inputs */
-        border: 1px solid #cccccc; /* Light grey borders */
-        border-radius: 4px; /* Rounded edges for inputs */
     }
     [data-testid="stSidebar"] button {
         background-color: #e0e0e0; /* Light grey for buttons */
-        color: #333333; /* Dark grey text for buttons */
-        border: 1px solid #999999; /* Slightly darker border for buttons */
+        color: #000000; /* Black text for buttons */
+        border: none; /* No borders */
         border-radius: 4px; /* Rounded edges */
     }
     [data-testid="stSidebar"] button:hover {
-        background-color: #d0d0d0; /* Darker grey on hover */
+        background-color: #d0d0d0; /* Slightly darker grey on hover */
+    }
+
+    /* Bold and Black Titles */
+    [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] label {
+        color: #000000; /* Black color */
+        font-weight: bold; /* Bold text */
     }
 
     /* Right Panel Styling */
     .main {
-        background-color: #e8e8e8; /* Slightly darker grey for the main content area */
-        color: #222222; /* Dark text for readability */
-    }
-    .stContainer {
-        background-color: #ffffff; /* White background for containers */
-        border: 1px solid #cccccc; /* Light grey border */
-        padding: 10px; /* Add some padding for better spacing */
-        border-radius: 8px; /* Rounded corners for containers */
+        background-color: #e8e8e8; /* Light grey background for the main content area */
+        color: #000000; /* Black text */
     }
 
     /* General Text Styling */
-    h1, h2, h3, h4, h5, h6, p {
-        color: #333333; /* Consistent dark grey for headings and text */
+    h1, h2, h3, h4, h5, h6, p, label {
+        color: #000000; /* Black text for headings and general text */
     }
     </style>
     """,
