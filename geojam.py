@@ -1,9 +1,8 @@
 import streamlit as st
 import pandas as pd
-import folium
-from streamlit_folium import st_folium
 import requests
 from geopy.distance import distance
+import streamlit.components.v1 as components
 
 
 # Initialize session state variables
@@ -11,12 +10,59 @@ if "results" not in st.session_state:
     st.session_state.results = None
 
 
+# Function to Embed Google Maps
+def google_maps_embed(lat, lon, zoom=12, radius=None, api_key="YOUR_GOOGLE_API_KEY"):
+    # Base URL for Google Maps Embed API
+    map_url = f"https://www.google.com/maps/embed/v1/view?key={api_key}&center={lat},{lon}&zoom={zoom}&maptype=roadmap"
+    
+    # Add radius circle if provided
+    if radius:
+        circle_script = f"""
+        <script>
+            function initMap() {{
+                var center = {{ lat: {lat}, lng: {lon} }};
+                var map = new google.maps.Map(document.getElementById('map'), {{
+                    zoom: {zoom},
+                    center: center
+                }});
+                var circle = new google.maps.Circle({{
+                    center: center,
+                    radius: {radius},
+                    map: map,
+                    fillColor: '#blue',
+                    fillOpacity: 0.2,
+                    strokeColor: '#0000FF',
+                    strokeOpacity: 0.7
+                }});
+                new google.maps.Marker({{
+                    position: center,
+                    map: map
+                }});
+            }}
+        </script>
+        """
+        map_url += f"&script={circle_script}"
+
+    # Embed the map
+    iframe_html = f"""
+    <iframe
+        width="100%"
+        height="500"
+        frameborder="0"
+        style="border:0"
+        src="{map_url}"
+        allowfullscreen>
+    </iframe>
+    """
+    components.html(iframe_html, height=500)
+
+
 # Sidebar: Inputs and Logo
 st.sidebar.title("GeoJam App")
 st.sidebar.write("Your Location-Based Search Tool")
 
 # Add a placeholder for the logo (use your own logo file here)
-st.sidebar.image("https://via.placeholder.com/150", use_container_width=True)  # Updated here
+st.sidebar.image("https://via.placeholder.com/150", use_container_width=True)  # Replace with your logo URL or file path
 
 # Sidebar Inputs
 st.sidebar.subheader("Enter Search Parameters")
@@ -63,28 +109,12 @@ if location_str.strip():
         # Parse the Lat/Long
         location = tuple(map(float, location_str.split(",")))
 
-        # Create Map with Folium
-        m = folium.Map(location=location, zoom_start=12)
-
-        # Add Circle to Map
-        folium.Circle(
-            location=location,
-            radius=radius,
-            color="blue",
-            fill=True,
-            fill_opacity=0.2,
-        ).add_to(m)
-
-        # Add Marker to Map
-        folium.Marker(location=location, popup="Center Point").add_to(m)
-
-        # Use a Streamlit container to enforce full width and height
-        with st.container():
-            st_folium(m, width=900, height=500)  # Adjust width and height as needed
+        # Display Google Maps
+        st.subheader("Map Visualization")
+        google_maps_embed(location[0], location[1], zoom=12, radius=radius, api_key=api_key)
 
     except ValueError:
         st.error("Invalid location format. Please enter as latitude,longitude.")
-
 
 # Results Processing
 if run_query and location_str.strip() and query:
@@ -92,7 +122,7 @@ if run_query and location_str.strip() and query:
         # Parse Lat/Long
         location = tuple(map(float, location_str.split(",")))
 
-        # Call Google Maps API
+        # Call Google Maps Places API
         endpoint = "https://maps.googleapis.com/maps/api/place/textsearch/json"
         params = {
             "query": query,
