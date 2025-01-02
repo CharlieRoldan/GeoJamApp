@@ -3,107 +3,114 @@ import requests
 import pandas as pd
 from geopy.distance import distance
 
-# Streamlit Title
-st.title("GeoJam Contextualization Tool")
-st.write("Search for places using the Google Places API and visualize results!")
 
 # Initialize session state variables
 if "results" not in st.session_state:
     st.session_state.results = None
 
-if "action" not in st.session_state:
-    st.session_state.action = "Search"
+if "state" not in st.session_state:
+    st.session_state.state = "search"  # Can be "search", "results", or "exit"
 
-# API Key Selection
-st.subheader("API Key Selection")
-api_choice = st.radio(
-    "Choose your API key option:",
-    ("Use GeoJam's API Key", "Use my own API Key"),
-)
+if "radius" not in st.session_state:
+    st.session_state.radius = None
 
-if api_choice == "Use GeoJam's API Key":
-    password = st.text_input("Enter GeoJam password:", type="password")
-    if password == "GEOJAM":
-        api_key = "AIzaSyBZ1oNBc74mCBB3Mc161f4CVHWorxV5iaA"
-        st.success("Using GeoJam's API key.")
+
+# Streamlit Title
+st.title("GeoJam Contextualization Tool")
+st.write("Search for places using the Google Places API and visualize results!")
+
+if st.session_state.state == "search":
+    # API Key Selection
+    st.subheader("API Key Selection")
+    api_choice = st.radio(
+        "Choose your API key option:",
+        ("Use GeoJam's API Key", "Use my own API Key"),
+    )
+
+    if api_choice == "Use GeoJam's API Key":
+        password = st.text_input("Enter GeoJam password:", type="password")
+        if password == "GEOJAM":
+            api_key = "AIzaSyBZ1oNBc74mCBB3Mc161f4CVHWorxV5iaA"
+            st.success("Using GeoJam's API key.")
+        else:
+            st.error("Incorrect password.")
+            st.stop()
     else:
-        st.error("Incorrect password.")
-        st.stop()
-else:
-    api_key = st.text_input("Enter your Google API Key:")
-    if not api_key:
-        st.warning("Please enter your API key.")
-        st.stop()
+        api_key = st.text_input("Enter your Google API Key:")
+        if not api_key:
+            st.warning("Please enter your API key.")
+            st.stop()
 
-# Input Fields for Query and Location
-st.subheader("Search Parameters")
-query = st.text_input("Enter search query (e.g., restaurants, cafes):")
-location_str = st.text_input(
-    "Enter location (latitude,longitude):", placeholder="40.7128,-74.0060"
-)
-radius = st.number_input(
-    "Enter radius (in meters):", min_value=1, max_value=50000, value=1000
-)
+    # Input Fields for Query and Location
+    st.subheader("Search Parameters")
+    query = st.text_input("Enter search query (e.g., restaurants, cafes):")
+    location_str = st.text_input(
+        "Enter location (latitude,longitude):", placeholder="40.7128,-74.0060"
+    )
+    radius = st.number_input(
+        "Enter radius (in meters):", min_value=1, max_value=50000, value=1000
+    )
 
-# Validate Location Input
-try:
-    location = tuple(map(float, location_str.split(",")))
-except ValueError:
-    st.error("Invalid location format. Please enter as latitude,longitude.")
-    st.stop()
-
-# Search Button
-if st.session_state.action == "Search" and st.button("Search"):
-    # Set up API endpoint and parameters
-    endpoint = "https://maps.googleapis.com/maps/api/place/textsearch/json"
-    params = {
-        "query": query,
-        "location": f"{location[0]},{location[1]}",
-        "radius": radius,
-        "key": api_key,
-    }
-
-    # Make API request
-    response = requests.get(endpoint, params=params)
-    data = response.json()
-
-    # Handle API Errors
-    if "error_message" in data:
-        st.error(f"API Error: {data['error_message']}")
+    # Validate Location Input
+    try:
+        location = tuple(map(float, location_str.split(",")))
+    except ValueError:
+        st.error("Invalid location format. Please enter as latitude,longitude.")
         st.stop()
 
-    # Process Results
-    st.subheader("Results")
-    results = []
-    for result in data.get("results", []):
-        name = result["name"]
-        address = result.get("formatted_address", "N/A")
-        latitude = result["geometry"]["location"]["lat"]
-        longitude = result["geometry"]["location"]["lng"]
-        rating = result.get("rating", "N/A")
-        place_loc = (latitude, longitude)
-        dist_m = distance(location, place_loc).meters
+    # Search Button
+    if st.button("Search"):
+        # Set up API endpoint and parameters
+        endpoint = "https://maps.googleapis.com/maps/api/place/textsearch/json"
+        params = {
+            "query": query,
+            "location": f"{location[0]},{location[1]}",
+            "radius": radius,
+            "key": api_key,
+        }
 
-        # Filter results within the specified radius
-        if dist_m <= radius:
-            results.append(
-                {
-                    "Name": name,
-                    "Address": address,
-                    "Latitude": latitude,
-                    "Longitude": longitude,
-                    "Rating": rating,
-                    "Distance (m)": int(dist_m),
-                }
-            )
+        # Make API request
+        response = requests.get(endpoint, params=params)
+        data = response.json()
 
-    # Save results to session state
-    st.session_state.results = results
-    st.session_state.action = "Results"
+        # Handle API Errors
+        if "error_message" in data:
+            st.error(f"API Error: {data['error_message']}")
+            st.stop()
 
-# Display Results
-if st.session_state.action == "Results" and st.session_state.results:
+        # Process Results
+        results = []
+        for result in data.get("results", []):
+            name = result["name"]
+            address = result.get("formatted_address", "N/A")
+            latitude = result["geometry"]["location"]["lat"]
+            longitude = result["geometry"]["location"]["lng"]
+            rating = result.get("rating", "N/A")
+            place_loc = (latitude, longitude)
+            dist_m = distance(location, place_loc).meters
+
+            # Filter results within the specified radius
+            if dist_m <= radius:
+                results.append(
+                    {
+                        "Name": name,
+                        "Address": address,
+                        "Latitude": latitude,
+                        "Longitude": longitude,
+                        "Rating": rating,
+                        "Distance (m)": int(dist_m),
+                    }
+                )
+
+        # Save results to session state and switch to results state
+        st.session_state.results = results
+        st.session_state.radius = radius
+        st.session_state.state = "results"
+
+elif st.session_state.state == "results":
+    # Display Results
     results = st.session_state.results
+    radius = st.session_state.radius
     st.write(f"Found {len(results)} results within {radius} meters:")
     st.table(results)
 
@@ -117,7 +124,8 @@ if st.session_state.action == "Results" and st.session_state.results:
     if action == "New Search":
         # Clear session state to restart
         st.session_state.results = None
-        st.session_state.action = "Search"
+        st.session_state.radius = None
+        st.session_state.state = "search"
 
     elif action == "Save Results as CSV":
         filename = st.text_input("Enter a filename for the CSV (without extension):", "results")
@@ -135,8 +143,11 @@ if st.session_state.action == "Results" and st.session_state.results:
                 file_name=f"{filename}.csv",
                 mime="text/csv",
             )
-            st.success(f"Results saved as {filename}.csv!")
+            st.success(f"Results ready for download!")
 
     elif action == "Quit":
-        st.info("Thank you for using GeoJam! The app has stopped.")
-        st.stop()
+        st.session_state.state = "exit"
+
+if st.session_state.state == "exit":
+    st.info("Thank you for using GeoJam! The app has stopped.")
+    st.stop()
