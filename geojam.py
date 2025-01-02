@@ -95,19 +95,37 @@ if st.button("Search"):
         st.write(f"Found {len(results)} results within {radius} meters:")
         st.table(results)
 
-        # Convert results to a DataFrame
-        results_df = pd.DataFrame(results)
-
-        # Convert DataFrame to CSV as bytes
-        csv = results_df.to_csv(index=False).encode('utf-8')
-
-        # Provide Download Option for CSV
-        st.download_button(
-            label="Download Results as CSV",
-            data=csv,
-            file_name="results.csv",
-            mime="text/csv",
+        # Provide options for the next action
+        st.subheader("What would you like to do next?")
+        action = st.radio(
+            "Choose an option:",
+            ("New Search", "Save Results as CSV", "Quit"),
         )
+
+        if action == "New Search":
+            st.experimental_rerun()  # Restart the app
+
+        elif action == "Save Results as CSV":
+            filename = st.text_input("Enter a filename for the CSV (without extension):", "results")
+            if st.button("Save CSV"):
+                # Convert results to a DataFrame
+                results_df = pd.DataFrame(results)
+
+                # Convert DataFrame to CSV as bytes
+                csv = results_df.to_csv(index=False).encode('utf-8')
+
+                # Provide the file for download
+                st.download_button(
+                    label="Download CSV",
+                    data=csv,
+                    file_name=f"{filename}.csv",
+                    mime="text/csv",
+                )
+                st.success(f"Results saved as {filename}.csv!")
+
+        elif action == "Quit":
+            st.info("Thank you for using GeoJam! The app has stopped.")
+            st.stop()
 
     else:
         st.warning("No results found within the specified radius.")
