@@ -12,12 +12,20 @@ st.set_page_config(layout="wide")
 if "results" not in st.session_state:
     st.session_state.results = None
 
-# Sidebar: Inputs and Logo
-st.sidebar.title("GeoJam App")
-st.sidebar.write("Your Location-Based Search Tool")
+# Sidebar Customization: Add logo and change background color
+st.sidebar.markdown(
+    """
+    <style>
+    [data-testid="stSidebar"] {
+        background-color: #f3f3f3;  /* Replace with the exact background color of your logo */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-# Add a placeholder for the logo (use your own logo file here)
-st.sidebar.image("https://via.placeholder.com/150", use_container_width=True)
+# Add the logo to the sidebar
+st.sidebar.image("assets/geojamlogo.png", use_container_width=True)  # Adjust the path if needed
 
 # Sidebar Inputs
 st.sidebar.subheader("Enter Search Parameters")
