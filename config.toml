@@ -1,0 +1,7 @@
+[theme]
+base="light"  # Forces the light theme to be used
+primaryColor="#000000"  # Black for buttons and highlights
+backgroundColor="#f3f3f3"  # Light grey for sidebar and other areas
+secondaryBackgroundColor="#e8e8e8"  # Slightly darker grey for main panel
+textColor="#333333"  # Dark grey for text
+font="sans serif"  # Modern and clean sans-serif font
