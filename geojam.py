@@ -1,7 +1,9 @@
 import streamlit as st
 import requests
 import csv
+import pandas as pd
 from geopy.distance import distance
+from io import StringIO
 
 # Streamlit Title
 st.title("GeoJam Contextualization Tool")
@@ -95,22 +97,20 @@ if st.button("Search"):
         st.write(f"Found {len(results)} results within {radius} meters:")
         st.table(results)
 
-        # Options: New Search, Save, or Quit
-        action = st.radio("What would you like to do next?", ("New Search", "Save to CSV", "Quit"))
+        # Convert results to a DataFrame
+        results_df = pd.DataFrame(results)
 
-        if action == "New Search":
-            st.experimental_rerun()  # Restarts the app
+        # Provide Download Option for CSV
+        csv = StringIO()
+        results_df.to_csv(csv, index=False)
+        csv.seek(0)
 
-        elif action == "Save to CSV":
-            filename = st.text_input("Enter a filename for the CSV (without extension):", "results")
-            if st.button("Save"):
-                with open(f"{filename}.csv", "w", newline="") as f:
-                    writer = csv.DictWriter(f, fieldnames=results[0].keys())
-                    writer.writeheader()
-                    writer.writerows(results)
-                st.success(f"Results saved to {filename}.csv!")
+        st.download_button(
+            label="Download Results as CSV",
+            data=csv,
+            file_name="results.csv",
+            mime="text/csv",
+        )
 
-        elif action == "Quit":
-            st.stop()
     else:
         st.warning("No results found within the specified radius.")
