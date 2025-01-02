@@ -5,7 +5,7 @@ from geopy.distance import distance
 
 # Print header
 print("╔════════════════════════════════════════════════════╗")
-print("║         Kido Dynamics Contextualization            ║")
+print("║         Tulkas GeoJam Contextualization            ║")
 print("╚════════════════════════════════════════════════════╝")
 
 # Set up API endpoint and parameters
