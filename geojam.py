@@ -20,37 +20,48 @@ st.markdown(
     [data-testid="stSidebar"] {
         background-color: #f3f3f3; /* Light grey background for the sidebar */
     }
-    [data-testid="stSidebar"] .stTextInput, 
+    [data-testid="stSidebar"] .stTextInput input,
     [data-testid="stSidebar"] .stSelectbox,
-    [data-testid="stSidebar"] .stRadio {
-        color: #000000; /* Black text */
-        background-color: #ffffff; /* White background for inputs */
+    [data-testid="stSidebar"] .stRadio div,
+    [data-testid="stSidebar"] .stSlider {
+        color: #000000 !important; /* Black text */
+        background-color: #ffffff !important; /* White background */
+        border: none; /* No borders */
+        border-radius: 4px; /* Rounded edges */
     }
     [data-testid="stSidebar"] button {
         background-color: #e0e0e0; /* Light grey for buttons */
-        color: #000000; /* Black text for buttons */
+        color: #000000 !important; /* Black text for buttons */
         border: none; /* No borders */
         border-radius: 4px; /* Rounded edges */
     }
     [data-testid="stSidebar"] button:hover {
-        background-color: #d0d0d0; /* Slightly darker grey on hover */
+        background-color: #d0d0d0 !important; /* Slightly darker grey on hover */
     }
 
     /* Bold and Black Titles */
     [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] label {
-        color: #000000; /* Black color */
+        color: #000000 !important; /* Black color */
         font-weight: bold; /* Bold text */
     }
 
     /* Right Panel Styling */
     .main {
-        background-color: #e8e8e8; /* Light grey background for the main content area */
-        color: #000000; /* Black text */
+        background-color: #e8e8e8 !important; /* Light grey background for the main content area */
+        color: #000000 !important; /* Black text */
+    }
+    .main h1, .main h2, .main h3, .main h4, .main h5, .main h6, .main p, .main label {
+        color: #000000 !important; /* Force black text for all headers and labels */
+    }
+    .main .stContainer {
+        background-color: #ffffff !important; /* White background for containers */
+        color: #000000 !important; /* Black text */
+        border: none !important; /* No borders */
     }
 
     /* General Text Styling */
     h1, h2, h3, h4, h5, h6, p, label {
-        color: #000000; /* Black text for headings and general text */
+        color: #000000 !important; /* Force black text globally */
     }
     </style>
     """,
