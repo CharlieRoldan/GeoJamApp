@@ -78,9 +78,8 @@ if location_str.strip():
         # Add Marker to Map
         folium.Marker(location=location, popup="Center Point").add_to(m)
 
-        # Display Map
-        st.subheader("Location Map")
-        st_folium(m, width=700, height=500)
+        # Display Map (occupy full width and at least half vertical space)
+        st_folium(m, width=900, height=400)  # Adjust dimensions as needed
 
     except ValueError:
         st.error("Invalid location format. Please enter as latitude,longitude.")
