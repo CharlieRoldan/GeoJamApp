@@ -24,13 +24,9 @@ api_choice = st.sidebar.radio(
 )
 
 if api_choice == "Use GeoJam's API Key":
-    password = st.sidebar.text_input("Enter GeoJam password:", type="password")
-    if password == "GEOJAM":
-        api_key = "AIzaSyBZ1oNBc74mCBB3Mc161f4CVHWorxV5iaA"
-        st.sidebar.success("Using GeoJam's API key.")
-    else:
-        st.sidebar.error("Incorrect password.")
-        st.stop()
+    # Use Streamlit secrets for the API key
+    api_key = st.secrets["google"]["api_key"]
+    st.sidebar.success("Using GeoJam's API key.")
 else:
     api_key = st.sidebar.text_input("Enter your Google API Key:")
     if not api_key.strip():
