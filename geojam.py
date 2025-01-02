@@ -104,17 +104,29 @@ if st.button("Run Search"):
 
 # Results Screen
 if st.session_state.results:
-    st.subheader("What would you like to do next?")
-    
-    # Filename Input
+    # Display Query Details
+    st.subheader("Query Details")
+    log = st.session_state.log
+    st.write("**Search Query**:", log.get("query"))
+    st.write("**Location**:", log.get("location"))
+    st.write("**Radius**:", f"{log.get('radius')} meters")
+
+    # Display Results Table
+    st.subheader("Search Results")
+    results = st.session_state.results
+    if results:
+        st.write(f"Found {len(results)} results:")
+        st.table(results)
+    else:
+        st.warning("No results found within the specified radius.")
+
+    # Save and Navigation Buttons
     filename = st.text_input("Enter a filename for the CSV (without extension):", "results")
-    
     if st.button("Go Back to Home Screen"):
         st.session_state.results = None  # Clear results to restart
-
     if st.button("Save as CSV"):
         if filename.strip():  # Ensure filename is not empty
-            results_df = pd.DataFrame(st.session_state.results)
+            results_df = pd.DataFrame(results)
             csv = results_df.to_csv(index=False).encode('utf-8')
             st.download_button(
                 label="Download CSV",
