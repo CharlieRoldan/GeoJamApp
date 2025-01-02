@@ -78,13 +78,12 @@ if location_str.strip():
         # Add Marker to Map
         folium.Marker(location=location, popup="Center Point").add_to(m)
 
-        # Use a Streamlit container to enforce full width and height
+        # Use a Streamlit container to enforce custom width and height
         with st.container():
-            st_folium(m, width=900, height=500)  # Adjust width and height as needed
+            st_folium(m, width=1660, height=500)  # Updated to 1660 x 500
 
     except ValueError:
         st.error("Invalid location format. Please enter as latitude,longitude.")
-
 
 # Results Processing
 if run_query and location_str.strip() and query:
