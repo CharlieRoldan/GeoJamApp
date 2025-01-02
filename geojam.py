@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import folium
+from streamlit_folium import st_folium
 import requests
 from geopy.distance import distance
 
@@ -52,15 +54,116 @@ radius = st.sidebar.slider(
     "Select radius (in meters):", min_value=1, max_value=50000, value=1000, step=100
 )
 
+# Run Search Button
+run_query = st.sidebar.button("Run Search")
+
 # Map Display
 if location_str.strip():
     try:
         # Parse the Lat/Long
         location = tuple(map(float, location_str.split(",")))
 
+        # Create Map with Folium
+        m = folium.Map(location=location, zoom_start=12)
+
+        # Add Circle to Map
+        folium.Circle(
+            location=location,
+            radius=radius,
+            color="blue",
+            fill=True,
+            fill_opacity=0.2,
+        ).add_to(m)
+
+        # Add Marker to Map
+        folium.Marker(location=location, popup="Center Point").add_to(m)
+
         # Display Map
         st.subheader("Location Map")
-        st.map(pd.DataFrame([{"lat": location[0], "lon": location[1]}]), zoom=12)
+        st_folium(m, width=700, height=500)
 
     except ValueError:
         st.error("Invalid location format. Please enter as latitude,longitude.")
+
+# Results Processing
+if run_query and location_str.strip() and query:
+    try:
+        # Parse Lat/Long
+        location = tuple(map(float, location_str.split(",")))
+
+        # Call Google Maps API
+        endpoint = "https://maps.googleapis.com/maps/api/place/textsearch/json"
+        params = {
+            "query": query,
+            "location": f"{location[0]},{location[1]}",
+            "radius": radius,
+            "key": api_key,
+        }
+        response = requests.get(endpoint, params=params)
+        data = response.json()
+
+        # Handle API Errors
+        if "error_message" in data:
+            st.error(f"API Error: {data['error_message']}")
+            st.stop()
+
+        # Process Results
+        results = []
+        for result in data.get("results", []):
+            name = result["name"]
+            address = result.get("formatted_address", "N/A")
+            latitude = result["geometry"]["location"]["lat"]
+            longitude = result["geometry"]["location"]["lng"]
+            rating = result.get("rating", "N/A")
+            place_loc = (latitude, longitude)
+            dist_m = distance(location, place_loc).meters
+
+            if dist_m <= radius:
+                results.append(
+                    {
+                        "Name": name,
+                        "Address": address,
+                        "Latitude": latitude,
+                        "Longitude": longitude,
+                        "Rating": rating,
+                        "Distance (m)": int(dist_m),
+                    }
+                )
+
+        # Save results to session state
+        st.session_state.results = results
+
+    except ValueError:
+        st.error("Invalid location format. Please enter as latitude,longitude.")
+
+# Results Display
+if st.session_state.results:
+    # Display Query Details
+    st.subheader("Query Details")
+    st.write("**Search Query**:", query)
+    st.write("**Location**:", location)
+    st.write("**Radius**:", f"{radius} meters")
+
+    # Display Results Table
+    st.subheader("Search Results")
+    results = st.session_state.results
+    if results:
+        st.write(f"Found {len(results)} results:")
+        st.table(results)
+
+        # Save Results
+        filename = st.text_input("Enter a filename for the CSV (without extension):", "results")
+        if st.button("Save as CSV"):
+            if filename.strip():
+                results_df = pd.DataFrame(results)
+                csv = results_df.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="Download CSV",
+                    data=csv,
+                    file_name=f"{filename.strip()}.csv",
+                    mime="text/csv",
+                )
+            else:
+                st.warning("Please enter a valid filename.")
+    else:
+        st.warning("No results found within the specified radius.")
