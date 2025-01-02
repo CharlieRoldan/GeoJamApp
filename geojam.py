@@ -105,14 +105,22 @@ if st.button("Run Search"):
 # Results Screen
 if st.session_state.results:
     st.subheader("What would you like to do next?")
+    
+    # Filename Input
+    filename = st.text_input("Enter a filename for the CSV (without extension):", "results")
+    
     if st.button("Go Back to Home Screen"):
         st.session_state.results = None  # Clear results to restart
+
     if st.button("Save as CSV"):
-        results_df = pd.DataFrame(st.session_state.results)
-        csv = results_df.to_csv(index=False).encode('utf-8')
-        st.download_button(
-            label="Download CSV",
-            data=csv,
-            file_name="results.csv",
-            mime="text/csv",
-        )
+        if filename.strip():  # Ensure filename is not empty
+            results_df = pd.DataFrame(st.session_state.results)
+            csv = results_df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="Download CSV",
+                data=csv,
+                file_name=f"{filename.strip()}.csv",
+                mime="text/csv",
+            )
+        else:
+            st.warning("Please enter a valid filename.")
