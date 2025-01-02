@@ -12,20 +12,55 @@ st.set_page_config(layout="wide")
 if "results" not in st.session_state:
     st.session_state.results = None
 
-# Sidebar Customization: Add logo and change background color
-st.sidebar.markdown(
+# Custom CSS for UI adjustments
+st.markdown(
     """
     <style>
+    /* Sidebar Styling */
     [data-testid="stSidebar"] {
-        background-color: #f3f3f3;  /* Replace with the exact background color of your logo */
+        background-color: #f3f3f3; /* Light grey background for the sidebar */
+    }
+    [data-testid="stSidebar"] .stTextInput, 
+    [data-testid="stSidebar"] .stSelectbox,
+    [data-testid="stSidebar"] .stRadio {
+        color: #333333; /* Dark grey text for readability */
+        background-color: #ffffff; /* White background for inputs */
+        border: 1px solid #cccccc; /* Light grey borders */
+        border-radius: 4px; /* Rounded edges for inputs */
+    }
+    [data-testid="stSidebar"] button {
+        background-color: #e0e0e0; /* Light grey for buttons */
+        color: #333333; /* Dark grey text for buttons */
+        border: 1px solid #999999; /* Slightly darker border for buttons */
+        border-radius: 4px; /* Rounded edges */
+    }
+    [data-testid="stSidebar"] button:hover {
+        background-color: #d0d0d0; /* Darker grey on hover */
+    }
+
+    /* Right Panel Styling */
+    .main {
+        background-color: #e8e8e8; /* Slightly darker grey for the main content area */
+        color: #222222; /* Dark text for readability */
+    }
+    .stContainer {
+        background-color: #ffffff; /* White background for containers */
+        border: 1px solid #cccccc; /* Light grey border */
+        padding: 10px; /* Add some padding for better spacing */
+        border-radius: 8px; /* Rounded corners for containers */
+    }
+
+    /* General Text Styling */
+    h1, h2, h3, h4, h5, h6, p {
+        color: #333333; /* Consistent dark grey for headings and text */
     }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# Add the logo to the sidebar
-st.sidebar.image("assets/geojamlogo.png", use_container_width=True)  # Adjust the path if needed
+# Sidebar: Inputs and Logo
+st.sidebar.image("assets/GeoJamLogo.png", use_container_width=True)  # Replace with your logo path
 
 # Sidebar Inputs
 st.sidebar.subheader("Enter Search Parameters")
