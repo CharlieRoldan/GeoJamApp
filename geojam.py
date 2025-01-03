@@ -4,6 +4,7 @@ import folium
 from streamlit_folium import st_folium
 import requests
 from geopy.distance import distance
+from st_aggrid import AgGrid, GridOptionsBuilder
 
 # Set Streamlit page layout to wide
 st.set_page_config(layout="wide")
@@ -13,7 +14,7 @@ if "results" not in st.session_state:
     st.session_state.results = None
 
 # Sidebar: Inputs and Logo
-st.sidebar.image("assets/GeoJamLogo.png", use_container_width=True)  # Replace with your logo path
+st.sidebar.image("assets/GeoJamLogo.png", use_container_width=True)
 
 st.sidebar.subheader("Enter Search Parameters")
 
@@ -126,12 +127,27 @@ if st.session_state.results:
     results = st.session_state.results
     if results:
         st.write(f"Found {len(results)} results:")
-        st.table(results)
 
+        # Use AgGrid for interactive table
+        results_df = pd.DataFrame(results)
+        gb = GridOptionsBuilder.from_dataframe(results_df)
+        gb.configure_pagination(paginationAutoPageSize=True)
+        gb.configure_side_bar()
+        gb.configure_default_column(resizable=True, filterable=True, sortable=True)
+        grid_options = gb.build()
+
+        AgGrid(
+            results_df,
+            gridOptions=grid_options,
+            height=300,
+            theme="streamlit",  # Other options: "light", "dark", "blue", etc.
+            enable_enterprise_modules=False,
+        )
+
+        # Save Results
         filename = st.text_input("Enter a filename for the CSV (without extension):", "results")
         if st.button("Save as CSV"):
             if filename.strip():
-                results_df = pd.DataFrame(results)
                 csv = results_df.to_csv(index=False).encode('utf-8')
                 st.download_button(
                     label="Download CSV",
