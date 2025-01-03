@@ -14,6 +14,7 @@ if "results" not in st.session_state:
     st.session_state.results = None
 
 # Sidebar Inputs
+st.sidebar.image("assets/geojamlogo.png", use_column_width=True)  # Add the main logo
 st.sidebar.subheader("Enter Search Parameters")
 
 # API Key Selection
@@ -63,10 +64,19 @@ radius = st.sidebar.slider(
 run_query = st.sidebar.button("Run Search")
 
 # Main Panel Layout
-
 if location_str.strip():
     try:
         location = tuple(map(float, location_str.split(",")))
+
+        # Add a small logo above the map on the right panel
+        st.markdown(
+            """
+            <div style="text-align: right;">
+                <img src="static/geojamloguito.png" alt="Small Logo" style="max-width: 150px; height: auto; margin-bottom: 10px;">
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
         # Display map
         m = folium.Map(location=location, zoom_start=12)
