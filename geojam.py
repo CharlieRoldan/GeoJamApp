@@ -50,15 +50,6 @@ run_query = st.sidebar.button("Run Search")
 
 # Main Panel Layout
 
-# Display small logo
-st.markdown(
-    """
-    <div style="text-align: right;">
-        <img src="static/geojamloguito.png" alt="Small Logo" style="max-width: 100%; height: auto; margin-bottom: 10px;">
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
 if location_str.strip():
     try:
         location = tuple(map(float, location_str.split(",")))
