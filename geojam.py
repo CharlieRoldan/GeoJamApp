@@ -54,7 +54,7 @@ run_query = st.sidebar.button("Run Search")
 st.markdown(
     """
     <div style="text-align: right;">
-        <img src="static/geojamloguito.png" alt="Small Logo" style="max-width: 100%; height: auto; margin-bottom: 10px;">
+        <img src="assets/geojamloguito.png" alt="Small Logo" style="max-width: 100%; height: auto; margin-bottom: 10px;">
     </div>
     """,
     unsafe_allow_html=True,
