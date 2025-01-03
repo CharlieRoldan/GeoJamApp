@@ -13,37 +13,25 @@ st.set_page_config(layout="wide")
 if "results" not in st.session_state:
     st.session_state.results = None
 
-# Sidebar Inputs with Info Icons
-st.sidebar.subheader("Enter Search Parameters")
-
-# Add info icon with hover tooltip for each field
-def input_with_tooltip(label, tooltip_text, key=None, **kwargs):
-    st.sidebar.markdown(
-        f"""
-        <div style="display: flex; align-items: center; margin-bottom: 5px;">
-            <span style="margin-right: 8px;">{label}</span>
-            <span style="width: 16px; height: 16px; display: inline-block; border-radius: 50%; background-color: #e0e0e0; color: #666; font-size: 12px; font-weight: bold; text-align: center; line-height: 16px; cursor: pointer;" 
-                title="{tooltip_text}">i</span>
-        </div>
-        """, unsafe_allow_html=True
-    )
-    return st.sidebar.text_input("", label_visibility="collapsed", key=key, **kwargs)
-
-# API Key Selection
-st.sidebar.markdown("""
-<div style="display: flex; align-items: center; margin-bottom: 5px;">
-    <span>Choose your API key option:</span>
-    <span style="width: 16px; height: 16px; display: inline-block; border-radius: 50%; background-color: #e0e0e0; color: #666; font-size: 12px; font-weight: bold; text-align: center; line-height: 16px; cursor: pointer;" 
-        title="Select whether to use the GeoJam API (with a password) or your own API key for queries.">i</span>
-</div>
-""", unsafe_allow_html=True)
-api_choice = st.sidebar.radio(
-    "",
-    ("Use GeoJam's API Key", "Use my own API Key"),
-    label_visibility="collapsed"
+# Sidebar: Logo and Inputs
+st.sidebar.markdown(
+    """
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="assets/geojamlogo.png" alt="GeoJam Logo" style="width: 200px;">
+    </div>
+    """, unsafe_allow_html=True
 )
 
-if api_choice == "Use GeoJam's API Key":
+st.sidebar.subheader("Enter Search Parameters")
+
+# API Key Selection
+api_choice = st.sidebar.radio(
+    "Choose your API key option:",
+    ("Use GeoJam API Key (US$ 1.00 per Query)", "Use my own API Key (Free)")
+)
+
+if api_choice == "Use GeoJam API Key (US$ 1.00 per Query)":
+    # Password-protect GeoJam API Key
     password = st.sidebar.text_input("Enter GeoJam password:", type="password")
     try:
         valid_password = st.secrets["google"]["password"]  # Retrieve password from secrets
@@ -56,7 +44,8 @@ if api_choice == "Use GeoJam's API Key":
     except KeyError:
         st.sidebar.error("GeoJam API key or password is not configured. Contact the administrator.")
         st.stop()
-elif api_choice == "Use my own API Key":
+elif api_choice == "Use my own API Key (Free)":
+    # Prompt user for their own API key
     api_key = st.sidebar.text_input("Enter your Google API Key:")
     if not api_key.strip():
         st.sidebar.warning("Please enter a valid API key to proceed.")
@@ -65,51 +54,23 @@ else:
     st.sidebar.warning("Please select an API key option to proceed.")
     st.stop()
 
-# Query Input with Tooltip
-query = input_with_tooltip(
-    label="Enter search query (e.g., restaurants, cafes):",
-    tooltip_text="Specify the type of business or location you want to search for.",
-    key="query",
+# Query Input
+query = st.sidebar.text_input("Enter search query (e.g., restaurants, cafes):", placeholder="e.g., McDonald's")
+
+# Location Input
+location_str = st.sidebar.text_input(
+    "Enter location (latitude,longitude):", placeholder="40.7128,-74.0060"
 )
 
-# Location Input with Tooltip
-location_str = input_with_tooltip(
-    label="Enter location (latitude,longitude):",
-    tooltip_text="Provide the coordinates for the center of your search area. Format: latitude,longitude.",
-    key="location_str",
-    placeholder="40.7128,-74.0060"
-)
-
-# Radius Slider with Tooltip
-st.sidebar.markdown("""
-<div style="display: flex; align-items: center; margin-bottom: 5px;">
-    <span>Select radius (in meters):</span>
-    <span style="width: 16px; height: 16px; display: inline-block; border-radius: 50%; background-color: #e0e0e0; color: #666; font-size: 12px; font-weight: bold; text-align: center; line-height: 16px; cursor: pointer;" 
-        title="Define the search area radius in meters (max 50 km).">i</span>
-</div>
-""", unsafe_allow_html=True)
+# Radius Slider
 radius = st.sidebar.slider(
-    "",
-    min_value=1,
-    max_value=50000,
-    value=1000,
-    step=100,
-    label_visibility="collapsed"
+    "Select radius (in meters):", min_value=1, max_value=50000, value=1000, step=100
 )
 
 # Run Search Button
 run_query = st.sidebar.button("Run Search")
 
-# Right Panel: Logo Above Map
-st.markdown(
-    """
-    <div style="text-align: right;">
-        <img src="static/geojamloguito.jpf" alt="Small Logo" style="width: 100px; margin-bottom: 10px;">
-    </div>
-    """, unsafe_allow_html=True
-)
-
-# Main Panel: Map and Results
+# Main Panel Layout
 if location_str.strip():
     try:
         location = tuple(map(float, location_str.split(",")))
@@ -177,7 +138,6 @@ if run_query and location_str.strip() and query:
     except ValueError:
         st.error("Invalid location format. Please enter as latitude,longitude.")
 
-# Results Table
 if st.session_state.results:
     st.subheader("Query Details")
     st.write("**Search Query**:", query)
