@@ -93,9 +93,7 @@ if run_query and location_str.strip() and query:
             if details_data.get("result"):
                 details = details_data["result"]
                 results.append({
-                    "Place ID": place_id,
                     "Name": result["name"],
-                    "Types": ", ".join(details.get("types", [])),
                     "Latitude": result["geometry"]["location"]["lat"],
                     "Longitude": result["geometry"]["location"]["lng"],
                     "Distance (m)": int(distance(location, (result["geometry"]["location"]["lat"], result["geometry"]["location"]["lng"])).meters),
@@ -111,6 +109,8 @@ if run_query and location_str.strip() and query:
                     "Hours": ", ".join(details.get("opening_hours", {}).get("weekday_text", [])),
                     "Wheelchair Accessible": details.get("wheelchair_accessible_entrance", "N/A"),
                     "Plus Code": details.get("plus_code", {}).get("compound_code", "N/A"),
+                    "Place ID": place_id,
+                    "Types": ", ".join(details.get("types", [])),
                 })
 
         st.session_state.results = results
