@@ -27,7 +27,7 @@ def input_with_tooltip(label, tooltip_text, key=None, **kwargs):
         </div>
         """, unsafe_allow_html=True
     )
-    return st.sidebar.text_input("", key=key, **kwargs)
+    return st.sidebar.text_input("", label_visibility="collapsed", key=key, **kwargs)
 
 # API Key Selection
 st.sidebar.markdown("""
@@ -40,6 +40,7 @@ st.sidebar.markdown("""
 api_choice = st.sidebar.radio(
     "",
     ("Use GeoJam's API Key", "Use my own API Key"),
+    label_visibility="collapsed"
 )
 
 if api_choice == "Use GeoJam's API Key":
@@ -65,14 +66,14 @@ else:
     st.stop()
 
 # Query Input with Tooltip
-input_with_tooltip(
+query = input_with_tooltip(
     label="Enter search query (e.g., restaurants, cafes):",
     tooltip_text="Specify the type of business or location you want to search for.",
     key="query",
 )
 
 # Location Input with Tooltip
-input_with_tooltip(
+location_str = input_with_tooltip(
     label="Enter location (latitude,longitude):",
     tooltip_text="Provide the coordinates for the center of your search area. Format: latitude,longitude.",
     key="location_str",
@@ -92,16 +93,26 @@ radius = st.sidebar.slider(
     min_value=1,
     max_value=50000,
     value=1000,
-    step=100
+    step=100,
+    label_visibility="collapsed"
 )
 
 # Run Search Button
 run_query = st.sidebar.button("Run Search")
 
+# Right Panel: Logo Above Map
+st.markdown(
+    """
+    <div style="text-align: right;">
+        <img src="static/geojamloguito.jpf" alt="Small Logo" style="width: 100px; margin-bottom: 10px;">
+    </div>
+    """, unsafe_allow_html=True
+)
+
 # Main Panel: Map and Results
-if st.session_state.get("location_str"):
+if location_str.strip():
     try:
-        location = tuple(map(float, st.session_state["location_str"].split(",")))
+        location = tuple(map(float, location_str.split(",")))
 
         # Display map
         m = folium.Map(location=location, zoom_start=12)
@@ -121,13 +132,13 @@ if st.session_state.get("location_str"):
     except ValueError:
         st.error("Invalid location format. Please enter as latitude,longitude.")
 
-if run_query and st.session_state.get("location_str") and st.session_state.get("query"):
+if run_query and location_str.strip() and query:
     try:
-        location = tuple(map(float, st.session_state["location_str"].split(",")))
+        location = tuple(map(float, location_str.split(",")))
 
         endpoint = "https://maps.googleapis.com/maps/api/place/textsearch/json"
         params = {
-            "query": st.session_state["query"],
+            "query": query,
             "location": f"{location[0]},{location[1]}",
             "radius": radius,
             "key": api_key,
@@ -169,7 +180,7 @@ if run_query and st.session_state.get("location_str") and st.session_state.get("
 # Results Table
 if st.session_state.results:
     st.subheader("Query Details")
-    st.write("**Search Query**:", st.session_state["query"])
+    st.write("**Search Query**:", query)
     st.write("**Location**:", location)
     st.write("**Radius**:", f"{radius} meters")
 
