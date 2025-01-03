@@ -13,9 +13,8 @@ st.set_page_config(layout="wide")
 if "results" not in st.session_state:
     st.session_state.results = None
 
-# Sidebar: Inputs and Logo
-st.sidebar.image("assets/GeoJamLogo.png", use_container_width=True)
-
+# Sidebar: Inputs and Main Logo
+st.sidebar.image("assets/GeoJamLogo.png", use_container_width=True)  # Main logo
 st.sidebar.subheader("Enter Search Parameters")
 
 # API Key Selection
@@ -25,7 +24,6 @@ api_choice = st.sidebar.radio(
 )
 
 if api_choice == "Use GeoJam's API Key":
-    # Use Streamlit secrets for the API key
     api_key = st.secrets["google"]["api_key"]
     st.sidebar.success("Using GeoJam's API key.")
 else:
@@ -55,6 +53,17 @@ if location_str.strip():
     try:
         location = tuple(map(float, location_str.split(",")))
 
+        # Display small logo
+        st.markdown(
+            """
+            <div style="text-align: right;">
+                <img src="assets/geojamloguito.png" alt="Small Logo" style="width: 150px; margin-bottom: 10px;">
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        # Display map
         m = folium.Map(location=location, zoom_start=12)
 
         folium.Circle(
