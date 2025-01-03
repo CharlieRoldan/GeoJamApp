@@ -13,30 +13,33 @@ st.set_page_config(layout="wide")
 if "results" not in st.session_state:
     st.session_state.results = None
 
-# Sidebar: Logo and Inputs
-st.sidebar.markdown(
-    """
-    <div style="text-align: center; margin-bottom: 20px;">
-        <img src="assets/geojamlogo.png" alt="GeoJam Logo" style="width: 200px;">
-    </div>
-    """, unsafe_allow_html=True
-)
+# Sidebar: Inputs and Logo
+st.sidebar.image("assets/geojamlogo.png", use_column_width=True)  # Left panel logo
 
 st.sidebar.subheader("Enter Search Parameters")
 
+# Helper function for "i" icons with hover text
+def info_icon(text):
+    st.sidebar.markdown(f"""
+    <span style="font-size: 0.9em; color: grey; cursor: help;" title="{text}">ℹ️</span>
+    """, unsafe_allow_html=True)
+
 # API Key Selection
+st.sidebar.markdown("**Choose your API key option:**")
 api_choice = st.sidebar.radio(
-    "Choose your API key option:",
+    "",
     ("Use GeoJam API Key (US$ 1.00 per Query)", "Use my own API Key (Free)")
 )
+info_icon("Select whether to use GeoJam's API key (requires password) or your own API key.")
 
 if api_choice == "Use GeoJam API Key (US$ 1.00 per Query)":
     # Password-protect GeoJam API Key
     password = st.sidebar.text_input("Enter GeoJam password:", type="password")
+    info_icon("Enter the password provided to use GeoJam's API key.")
     try:
-        valid_password = st.secrets["google"]["password"]  # Retrieve password from secrets
+        valid_password = st.secrets["google"]["password"]
         if password == valid_password:
-            api_key = st.secrets["google"]["api_key"]  # Retrieve API key
+            api_key = st.secrets["google"]["api_key"]
             st.sidebar.success("Password accepted. Using GeoJam's API key.")
         else:
             st.sidebar.error("Invalid password. Please try again.")
@@ -47,6 +50,7 @@ if api_choice == "Use GeoJam API Key (US$ 1.00 per Query)":
 elif api_choice == "Use my own API Key (Free)":
     # Prompt user for their own API key
     api_key = st.sidebar.text_input("Enter your Google API Key:")
+    info_icon("Provide your own Google API key to proceed.")
     if not api_key.strip():
         st.sidebar.warning("Please enter a valid API key to proceed.")
         st.stop()
@@ -55,22 +59,28 @@ else:
     st.stop()
 
 # Query Input
-query = st.sidebar.text_input("Enter search query (e.g., restaurants, cafes):", placeholder="e.g., McDonald's")
+query = st.sidebar.text_input("Enter search query (e.g., restaurants, cafes):")
+info_icon("Type the keyword for the search, like 'restaurants' or 'cafes'.")
 
 # Location Input
 location_str = st.sidebar.text_input(
     "Enter location (latitude,longitude):", placeholder="40.7128,-74.0060"
 )
+info_icon("Provide the location as latitude,longitude (e.g., 40.7128,-74.0060).")
 
 # Radius Slider
 radius = st.sidebar.slider(
     "Select radius (in meters):", min_value=1, max_value=50000, value=1000, step=100
 )
+info_icon("Choose the radius for the search area, up to 50 kilometers.")
 
 # Run Search Button
-run_query = st.sidebar.button("Run Search")
+if st.sidebar.button("Run Search"):
+    run_query = True
+else:
+    run_query = False
 
-# Main Panel Layout
+# Main Panel: Map and Results
 if location_str.strip():
     try:
         location = tuple(map(float, location_str.split(",")))
@@ -124,7 +134,9 @@ if run_query and location_str.strip() and query:
             if dist_m <= radius:
                 results.append(
                     {
+                        "Place ID": result["place_id"],
                         "Name": name,
+                        "Type": ", ".join(result.get("types", [])),
                         "Address": address,
                         "Latitude": latitude,
                         "Longitude": longitude,
