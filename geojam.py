@@ -57,10 +57,10 @@ if location_str.strip():
         st.markdown(
             """
             <div style="text-align: right;">
-                <img src="assets/geojamloguito.png" alt="Small Logo" style="width: 150px; margin-bottom: 10px;">
+                <img src="assets/geojamloguito.png" alt="Small Logo" style="max-width: 100%; height: auto; margin-bottom: 10px;">
             </div>
             """,
-            unsafe_allow_html=True,
+        unsafe_allow_html=True,
         )
 
         # Display map
