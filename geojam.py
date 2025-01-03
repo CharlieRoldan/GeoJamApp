@@ -13,8 +13,7 @@ st.set_page_config(layout="wide")
 if "results" not in st.session_state:
     st.session_state.results = None
 
-# Sidebar: Inputs and Main Logo
-st.sidebar.image("assets/GeoJamLogo.png", use_container_width=True)  # Main logo
+# Sidebar Inputs
 st.sidebar.subheader("Enter Search Parameters")
 
 # API Key Selection
@@ -24,13 +23,28 @@ api_choice = st.sidebar.radio(
 )
 
 if api_choice == "Use GeoJam's API Key":
-    api_key = st.secrets["google"]["api_key"]
-    st.sidebar.success("Using GeoJam's API key.")
-else:
+    # Password-protect GeoJam API Key
+    password = st.sidebar.text_input("Enter GeoJam password:", type="password")
+    try:
+        valid_password = st.secrets["google"]["password"]  # Retrieve password from secrets
+        if password == valid_password:
+            api_key = st.secrets["google"]["api_key"]  # Retrieve API key
+            st.sidebar.success("Password accepted. Using GeoJam's API key.")
+        else:
+            st.sidebar.error("Invalid password. Please try again.")
+            st.stop()
+    except KeyError:
+        st.sidebar.error("GeoJam API key or password is not configured. Contact the administrator.")
+        st.stop()
+elif api_choice == "Use my own API Key":
+    # Prompt user for their own API key
     api_key = st.sidebar.text_input("Enter your Google API Key:")
     if not api_key.strip():
-        st.sidebar.warning("Please enter your API key.")
+        st.sidebar.warning("Please enter a valid API key to proceed.")
         st.stop()
+else:
+    st.sidebar.warning("Please select an API key option to proceed.")
+    st.stop()
 
 # Query Input
 query = st.sidebar.text_input("Enter search query (e.g., restaurants, cafes):")
