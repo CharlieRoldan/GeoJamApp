@@ -20,7 +20,7 @@ st.sidebar.subheader("Enter Search Parameters")
 # API Key Selection
 api_choice = st.sidebar.radio(
     "Choose your API key option:",
-    ("Use GeoJam API Key (US$ 1.00 per Query)", "Use my own API Key (Free)"),
+    ("Use GeoJam's API Key", "Use my own API Key"),
 )
 
 if api_choice == "Use GeoJam's API Key":
