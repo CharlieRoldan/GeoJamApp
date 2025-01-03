@@ -69,14 +69,14 @@ if location_str.strip():
         location = tuple(map(float, location_str.split(",")))
 
         # Add a small logo above the map on the right panel
-        st.markdown(
-            """
-            <div style="text-align: right;">
-                <img src="static/geojamloguito.png" alt="Small Logo" style="max-width: 150px; height: auto; margin-bottom: 10px;">
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        #st.markdown(
+        #    """
+        #    <div style="text-align: right;">
+        #        <img src="static/geojamloguito.png" alt="Small Logo" style="max-width: 150px; height: auto; margin-bottom: 10px;">
+        #    </div>
+        #    """,
+        #    unsafe_allow_html=True,
+        #)
 
         # Display map
         m = folium.Map(location=location, zoom_start=12)
