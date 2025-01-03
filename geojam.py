@@ -13,23 +13,41 @@ st.set_page_config(layout="wide")
 if "results" not in st.session_state:
     st.session_state.results = None
 
-# Sidebar Inputs
-st.sidebar.image("assets/geojamlogo.png", use_container_width=True)
+# Sidebar Inputs with Info Icons
 st.sidebar.subheader("Enter Search Parameters")
 
+# Add info icon with hover tooltip for each field
+def input_with_tooltip(label, tooltip_text, key=None, **kwargs):
+    st.sidebar.markdown(
+        f"""
+        <div style="display: flex; align-items: center; margin-bottom: 5px;">
+            <span style="margin-right: 8px;">{label}</span>
+            <span style="width: 16px; height: 16px; display: inline-block; border-radius: 50%; background-color: #e0e0e0; color: #666; font-size: 12px; font-weight: bold; text-align: center; line-height: 16px; cursor: pointer;" 
+                title="{tooltip_text}">i</span>
+        </div>
+        """, unsafe_allow_html=True
+    )
+    return st.sidebar.text_input("", key=key, **kwargs)
+
 # API Key Selection
+st.sidebar.markdown("""
+<div style="display: flex; align-items: center; margin-bottom: 5px;">
+    <span>Choose your API key option:</span>
+    <span style="width: 16px; height: 16px; display: inline-block; border-radius: 50%; background-color: #e0e0e0; color: #666; font-size: 12px; font-weight: bold; text-align: center; line-height: 16px; cursor: pointer;" 
+        title="Select whether to use the GeoJam API (with a password) or your own API key for queries.">i</span>
+</div>
+""", unsafe_allow_html=True)
 api_choice = st.sidebar.radio(
-    "Choose your API key option:",
+    "",
     ("Use GeoJam's API Key", "Use my own API Key"),
 )
 
 if api_choice == "Use GeoJam's API Key":
-    # Password-protect GeoJam API Key
     password = st.sidebar.text_input("Enter GeoJam password:", type="password")
     try:
-        valid_password = st.secrets["google"]["password"]
+        valid_password = st.secrets["google"]["password"]  # Retrieve password from secrets
         if password == valid_password:
-            api_key = st.secrets["google"]["api_key"]
+            api_key = st.secrets["google"]["api_key"]  # Retrieve API key
             st.sidebar.success("Password accepted. Using GeoJam's API key.")
         else:
             st.sidebar.error("Invalid password. Please try again.")
@@ -42,31 +60,74 @@ elif api_choice == "Use my own API Key":
     if not api_key.strip():
         st.sidebar.warning("Please enter a valid API key to proceed.")
         st.stop()
+else:
+    st.sidebar.warning("Please select an API key option to proceed.")
+    st.stop()
 
-# Query Input
-query = st.sidebar.text_input("Enter search query (e.g., restaurants, cafes):")
-location_str = st.sidebar.text_input("Enter location (latitude,longitude):", placeholder="40.7128,-74.0060")
-radius = st.sidebar.slider("Select radius (in meters):", min_value=1, max_value=50000, value=1000, step=100)
+# Query Input with Tooltip
+input_with_tooltip(
+    label="Enter search query (e.g., restaurants, cafes):",
+    tooltip_text="Specify the type of business or location you want to search for.",
+    key="query",
+)
+
+# Location Input with Tooltip
+input_with_tooltip(
+    label="Enter location (latitude,longitude):",
+    tooltip_text="Provide the coordinates for the center of your search area. Format: latitude,longitude.",
+    key="location_str",
+    placeholder="40.7128,-74.0060"
+)
+
+# Radius Slider with Tooltip
+st.sidebar.markdown("""
+<div style="display: flex; align-items: center; margin-bottom: 5px;">
+    <span>Select radius (in meters):</span>
+    <span style="width: 16px; height: 16px; display: inline-block; border-radius: 50%; background-color: #e0e0e0; color: #666; font-size: 12px; font-weight: bold; text-align: center; line-height: 16px; cursor: pointer;" 
+        title="Define the search area radius in meters (max 50 km).">i</span>
+</div>
+""", unsafe_allow_html=True)
+radius = st.sidebar.slider(
+    "",
+    min_value=1,
+    max_value=50000,
+    value=1000,
+    step=100
+)
+
+# Run Search Button
 run_query = st.sidebar.button("Run Search")
 
-# Display Map
-if location_str.strip():
+# Main Panel: Map and Results
+if st.session_state.get("location_str"):
     try:
-        location = tuple(map(float, location_str.split(",")))
+        location = tuple(map(float, st.session_state["location_str"].split(",")))
+
+        # Display map
         m = folium.Map(location=location, zoom_start=12)
-        folium.Circle(location=location, radius=radius, color="blue", fill=True, fill_opacity=0.2).add_to(m)
+
+        folium.Circle(
+            location=location,
+            radius=radius,
+            color="blue",
+            fill=True,
+            fill_opacity=0.2,
+        ).add_to(m)
+
         folium.Marker(location=location, popup="Center Point").add_to(m)
+
         st_folium(m, width=1660, height=500)
+
     except ValueError:
         st.error("Invalid location format. Please enter as latitude,longitude.")
 
-# Fetch Data
-if run_query and location_str.strip() and query:
+if run_query and st.session_state.get("location_str") and st.session_state.get("query"):
     try:
-        location = tuple(map(float, location_str.split(",")))
+        location = tuple(map(float, st.session_state["location_str"].split(",")))
+
         endpoint = "https://maps.googleapis.com/maps/api/place/textsearch/json"
         params = {
-            "query": query,
+            "query": st.session_state["query"],
             "location": f"{location[0]},{location[1]}",
             "radius": radius,
             "key": api_key,
@@ -78,76 +139,73 @@ if run_query and location_str.strip() and query:
             st.error(f"API Error: {data['error_message']}")
             st.stop()
 
-        # Process Results
         results = []
         for result in data.get("results", []):
-            place_id = result["place_id"]
-            details_endpoint = "https://maps.googleapis.com/maps/api/place/details/json"
-            details_params = {
-                "place_id": place_id,
-                "key": api_key,
-            }
-            details_response = requests.get(details_endpoint, params=details_params)
-            details_data = details_response.json()
+            name = result["name"]
+            address = result.get("formatted_address", "N/A")
+            latitude = result["geometry"]["location"]["lat"]
+            longitude = result["geometry"]["location"]["lng"]
+            rating = result.get("rating", "N/A")
+            place_loc = (latitude, longitude)
+            dist_m = distance(location, place_loc).meters
 
-            if details_data.get("result"):
-                details = details_data["result"]
-                results.append({
-                    "Name": result["name"],
-                    "Latitude": result["geometry"]["location"]["lat"],
-                    "Longitude": result["geometry"]["location"]["lng"],
-                    "Distance (m)": int(distance(location, (result["geometry"]["location"]["lat"], result["geometry"]["location"]["lng"])).meters),
-                    "Vicinity": result.get("vicinity", "N/A"),
-                    "Formatted Address": details.get("formatted_address", "N/A"),
-                    "Status NOW": details.get("business_status", "N/A"),
-                    "Rating": result.get("rating", "N/A"),
-                    "User Ratings Total": result.get("user_ratings_total", "N/A"),
-                    "Price Level": details.get("price_level", "N/A"),
-                    "Website": details.get("website", "N/A"),
-                    "Google URL": details.get("url", "N/A"),
-                    "Phone": details.get("international_phone_number", "N/A"),
-                    "Hours": ", ".join(details.get("opening_hours", {}).get("weekday_text", [])),
-                    "Wheelchair Accessible": details.get("wheelchair_accessible_entrance", "N/A"),
-                    "Plus Code": details.get("plus_code", {}).get("compound_code", "N/A"),
-                    "Place ID": place_id,
-                    "Types": ", ".join(details.get("types", [])),
-                })
+            if dist_m <= radius:
+                results.append(
+                    {
+                        "Name": name,
+                        "Address": address,
+                        "Latitude": latitude,
+                        "Longitude": longitude,
+                        "Rating": rating,
+                        "Distance (m)": int(dist_m),
+                    }
+                )
 
         st.session_state.results = results
 
     except ValueError:
         st.error("Invalid location format. Please enter as latitude,longitude.")
 
-# Display Results
+# Results Table
 if st.session_state.results:
+    st.subheader("Query Details")
+    st.write("**Search Query**:", st.session_state["query"])
+    st.write("**Location**:", location)
+    st.write("**Radius**:", f"{radius} meters")
+
     st.subheader("Search Results")
-    results_df = pd.DataFrame(st.session_state.results)
+    results = st.session_state.results
+    if results:
+        st.write(f"Found {len(results)} results:")
 
-    # Configure AgGrid
-    gb = GridOptionsBuilder.from_dataframe(results_df)
-    gb.configure_pagination(paginationAutoPageSize=True)
-    gb.configure_side_bar()
-    gb.configure_default_column(resizable=True, filterable=True, sortable=True)
-    grid_options = gb.build()
+        # Use AgGrid for interactive table
+        results_df = pd.DataFrame(results)
+        gb = GridOptionsBuilder.from_dataframe(results_df)
+        gb.configure_pagination(paginationAutoPageSize=True)
+        gb.configure_side_bar()
+        gb.configure_default_column(resizable=True, filterable=True, sortable=True)
+        grid_options = gb.build()
 
-    AgGrid(
-        results_df,
-        gridOptions=grid_options,
-        height=300,
-        theme="streamlit",
-        enable_enterprise_modules=False,
-    )
+        AgGrid(
+            results_df,
+            gridOptions=grid_options,
+            height=300,
+            theme="streamlit",  # Other options: "light", "dark", "blue", etc.
+            enable_enterprise_modules=False,
+        )
 
-    # Save Results
-    filename = st.text_input("Enter a filename for the CSV (without extension):", "results")
-    if st.button("Save as CSV"):
-        if filename.strip():
-            csv = results_df.to_csv(index=False).encode("utf-8")
-            st.download_button(
-                label="Download CSV",
-                data=csv,
-                file_name=f"{filename.strip()}.csv",
-                mime="text/csv",
-            )
-        else:
-            st.warning("Please enter a valid filename.")
+        # Save Results
+        filename = st.text_input("Enter a filename for the CSV (without extension):", "results")
+        if st.button("Save as CSV"):
+            if filename.strip():
+                csv = results_df.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="Download CSV",
+                    data=csv,
+                    file_name=f"{filename.strip()}.csv",
+                    mime="text/csv",
+                )
+            else:
+                st.warning("Please enter a valid filename.")
+    else:
+        st.warning("No results found within the specified radius.")
