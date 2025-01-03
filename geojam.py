@@ -14,7 +14,7 @@ if "results" not in st.session_state:
     st.session_state.results = None
 
 # Sidebar Inputs
-st.sidebar.image("assets/geojamlogo.png", use_column_width=True)  # Add the main logo
+st.sidebar.image("assets/geojamlogo.png", use_container_width=True)  # Add the main logo
 st.sidebar.subheader("Enter Search Parameters")
 
 # API Key Selection
