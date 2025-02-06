@@ -5,6 +5,7 @@ from streamlit_folium import st_folium
 import requests
 from geopy.distance import distance
 from st_aggrid import AgGrid, GridOptionsBuilder
+import simplekml  # For KML creation
 
 # Set Streamlit page layout to wide
 st.set_page_config(layout="wide")
@@ -118,6 +119,24 @@ if run_query and location_str.strip() and query:
     except ValueError:
         st.error("Invalid location format. Please enter as latitude,longitude.")
 
+# Save as KML Function
+def save_as_kml(data, filename):
+    kml = simplekml.Kml()
+    for index, row in data.iterrows():
+        kml.newpoint(
+            name=row["Name"],
+            coords=[(row["Longitude"], row["Latitude"])],
+            description=f"""
+                <b>Address:</b> {row["Formatted Address"]}<br>
+                <b>Vicinity:</b> {row["Vicinity"]}<br>
+                <b>Rating:</b> {row["Rating"]} ({row["User Ratings Total"]} reviews)<br>
+                <b>Status:</b> {row["Status NOW"]}<br>
+                <b>Website:</b> {row["Website"]}<br>
+                <b>Phone:</b> {row["Phone"]}<br>
+            """
+        )
+    kml.save(f"{filename}.kml")
+
 # Display Results
 if st.session_state.results:
     st.subheader("Search Results")
@@ -139,7 +158,7 @@ if st.session_state.results:
     )
 
     # Save Results
-    filename = st.text_input("Enter a filename for the CSV (without extension):", "results")
+    filename = st.text_input("Enter a filename for the export (without extension):", "results")
     if st.button("Save as CSV"):
         if filename.strip():
             csv = results_df.to_csv(index=False).encode("utf-8")
@@ -149,5 +168,18 @@ if st.session_state.results:
                 file_name=f"{filename.strip()}.csv",
                 mime="text/csv",
             )
+        else:
+            st.warning("Please enter a valid filename.")
+
+    if st.button("Save as KML"):
+        if filename.strip():
+            save_as_kml(results_df, filename.strip())
+            with open(f"{filename.strip()}.kml", "rb") as file:
+                st.download_button(
+                    label="Download KML",
+                    data=file,
+                    file_name=f"{filename.strip()}.kml",
+                    mime="application/vnd.google-earth.kml+xml",
+                )
         else:
             st.warning("Please enter a valid filename.")

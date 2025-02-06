@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">
+    <Document id="1">
+        <Placemark id="3">
+            <name>Supermercados DIA</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; José Valentín Gómez 7040, B1669 Del Viso, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 3.9 (1582 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; https://diaonline.supermercadosdia.com.ar/&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; N/A&lt;br&gt;
+            </description>
+            <Point id="2">
+                <coordinates>-58.7973481,-34.4516341,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="5">
+            <name>Supermercados DIA</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Hipólito Yrigoyen 465, B1664 Manuel Alberti, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 3.7 (1296 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; https://diaonline.supermercadosdia.com.ar/&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; N/A&lt;br&gt;
+            </description>
+            <Point id="4">
+                <coordinates>-58.77522270000001,-34.4614461,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="7">
+            <name>Carrefour Express</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Av. Ing. Eduardo Madero 1050, B1669 Del Viso, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.1 (478 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; https://express.carrefour.com.ar/&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; +54 800-444-8484&lt;br&gt;
+            </description>
+            <Point id="6">
+                <coordinates>-58.7970538,-34.4494435,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="9">
+            <name>Supermercado Family supermarket</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Batalla de Curupayti 353, B1664CVG Manuel Alberti, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.0 (141 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; N/A&lt;br&gt;
+            </description>
+            <Point id="8">
+                <coordinates>-58.7832275,-34.45330149999999,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="11">
+            <name>Supermercado COTO</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; highland park e/los jazmines, Las Campanillas y, B1669 Buenos Aires, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.0 (69 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; http://www.coto.com.ar/?utm_source=gmb&amp;utm_medium=organic&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; +54 2320 47-6471&lt;br&gt;
+            </description>
+            <Point id="10">
+                <coordinates>-58.7952045,-34.4202001,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="13">
+            <name>Supermercado Ideal</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; 1001-1199, B1664CNI, Batalla de Arroyo Grande, B1664CNI Manuel Alberti, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.3 (215 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; N/A&lt;br&gt;
+            </description>
+            <Point id="12">
+                <coordinates>-58.77271990000001,-34.4505195,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="15">
+            <name>Del Viso Market</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Lisandro de la Torre 5976, B1669 Del Viso, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.0 (590 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; https://gogo.ar/delvisomarket&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; +54 11 5329-2587&lt;br&gt;
+            </description>
+            <Point id="14">
+                <coordinates>-58.7874134,-34.4603024,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="17">
+            <name>Supermercado Chino</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Jockey Club 2508, B1664DDJ Manuel Alberti, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.4 (48 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; N/A&lt;br&gt;
+            </description>
+            <Point id="16">
+                <coordinates>-58.7630848,-34.4405982,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="19">
+            <name>Tú Market</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Av. Constitución 2251 2do piso, B1664MCJ Manuel Alberti, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.3 (337 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; N/A&lt;br&gt;
+            </description>
+            <Point id="18">
+                <coordinates>-58.7781992,-34.4241626,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="21">
+            <name>Plus Market</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Lisandro de la Torre 8003, B1669 Del Viso, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.0 (140 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; N/A&lt;br&gt;
+            </description>
+            <Point id="20">
+                <coordinates>-58.80111770000001,-34.4438498,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="23">
+            <name>Supermercado Angeltila</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Av. Constitución 385, B1664 Pilar, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 3.6 (298 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; +54 2320 30-0866&lt;br&gt;
+            </description>
+            <Point id="22">
+                <coordinates>-58.78922350000001,-34.4454158,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="25">
+            <name>Carrefour Flash powered by MiniGo</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Los Crisantemos 392, Del Viso, B1426 Pilar, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.2 (19 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; http://www.minigo.store/&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; +54 9 11 5482-4952&lt;br&gt;
+            </description>
+            <Point id="24">
+                <coordinates>-58.7963801,-34.4354687,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="27">
+            <name>SUPERMERCADO LUNA</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Manuel Luis de Oliden 7450, B1664 Del Viso, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 3.9 (605 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; https://www.facebook.com/profile.php?id=100061622515148&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; N/A&lt;br&gt;
+            </description>
+            <Point id="26">
+                <coordinates>-58.7939713,-34.4462253,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="29">
+            <name>Súper Realico</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Luis Gonnet 7087, B1669GFY Gran Buenos Aires, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 3.6 (315 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; +54 11 3520-9809&lt;br&gt;
+            </description>
+            <Point id="28">
+                <coordinates>-58.79872109999999,-34.4530619,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="31">
+            <name>Supermercado chino</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Golf Club Rio Cuarto 1750, B1664MJA Manuel Alberti, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.2 (96 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; N/A&lt;br&gt;
+            </description>
+            <Point id="30">
+                <coordinates>-58.7568423,-34.4422024,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="33">
+            <name>Abuela Eliza</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Av. 12 de Octubre 3275, B1669 Manuel Alberti, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.9 (46 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; https://www.abuelaeliza.com.ar/&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; +54 9 11 2351-3646&lt;br&gt;
+            </description>
+            <Point id="32">
+                <coordinates>-58.7907894,-34.4383322,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="35">
+            <name>Supermercado Maya</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Antonio Beruti 1234, B1669CRN Del Viso, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.0 (4 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; N/A&lt;br&gt;
+            </description>
+            <Point id="34">
+                <coordinates>-58.79599160000001,-34.453096,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="37">
+            <name>REYNA SUPERMARKET</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Los Fresnos, Sta Elena y, B1664 Manuel Alberti, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.2 (91 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; N/A&lt;br&gt;
+            </description>
+            <Point id="36">
+                <coordinates>-58.7770127,-34.4633118,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="39">
+            <name>Supermercados DIA</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Av. Constitución 218, B1620BDP Maquinista Savio, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 3.8 (854 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; https://diaonline.supermercadosdia.com.ar/&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; N/A&lt;br&gt;
+            </description>
+            <Point id="38">
+                <coordinates>-58.7717916,-34.4095921,0.0</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="41">
+            <name>supermercado plus market</name>
+            <description>
+                &lt;b&gt;Address:&lt;/b&gt; Sta. Teresa 923, B1664 Manuel Alberti, Provincia de Buenos Aires, Argentina&lt;br&gt;
+                &lt;b&gt;Vicinity:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Rating:&lt;/b&gt; 4.4 (519 reviews)&lt;br&gt;
+                &lt;b&gt;Status:&lt;/b&gt; OPERATIONAL&lt;br&gt;
+                &lt;b&gt;Website:&lt;/b&gt; N/A&lt;br&gt;
+                &lt;b&gt;Phone:&lt;/b&gt; N/A&lt;br&gt;
+            </description>
+            <Point id="40">
+                <coordinates>-58.7736768,-34.4651372,0.0</coordinates>
+            </Point>
+        </Placemark>
+    </Document>
+</kml>
