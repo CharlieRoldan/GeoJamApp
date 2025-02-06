@@ -13,42 +13,91 @@ st.set_page_config(layout="wide")
 # Initialize session state variables
 if "results" not in st.session_state:
     st.session_state.results = None
+if "password_attempted" not in st.session_state:
+    st.session_state.password_attempted = False
 
 # Sidebar Inputs
 st.sidebar.image("assets/geojamlogo.png", use_container_width=True)
 st.sidebar.subheader("Enter Search Parameters")
 
+# 🔹 Always Visible: Contact Us Message
+st.sidebar.markdown(
+    '<p style="font-size: 15px; color: #007BFF; font-weight: bold; margin-bottom: 5px;">Contact us for a code: mermedata@gmail.com</p>',
+    unsafe_allow_html=True
+)
+
 # API Key Selection
 api_choice = st.sidebar.radio(
     "Choose your API key option:",
-    ("Use GeoJam's API Key", "Use my own API Key"),
+    ("Use a purchased code from GeoJam", "Use my own API Key"),
 )
 
-if api_choice == "Use GeoJam's API Key":
-    # Password-protect GeoJam API Key
-    password = st.sidebar.text_input("Enter GeoJam password:", type="password")
+api_key = None  # Default to None
+
+# Handle GeoJam API Key Input with Multiple Passcodes
+if api_choice == "Use a purchased code from GeoJam":
+    password = st.sidebar.text_input(
+        "Enter GeoJam passcode:", 
+        type="password", 
+        placeholder="Input the code you have received from us"
+    )
+
+    if password:
+        st.session_state.password_attempted = True
+
     try:
-        valid_password = st.secrets["google"]["password"]
-        if password == valid_password:
+        stored_passcodes = st.secrets.get("passcodes", {})
+
+        valid_user = None
+        for user, stored_code in stored_passcodes.items():
+            if password == stored_code:
+                valid_user = user
+                break
+
+        if valid_user:
             api_key = st.secrets["google"]["api_key"]
-            st.sidebar.success("Password accepted. Using GeoJam's API key.")
+            st.sidebar.success(f"✅ Welcome, {valid_user}. Access granted.")
+            st.session_state.password_attempted = False
         else:
-            st.sidebar.error("Invalid password. Please try again.")
-            st.stop()
-    except KeyError:
-        st.sidebar.error("GeoJam API key or password is not configured. Contact the administrator.")
-        st.stop()
+            st.sidebar.error("❌ Invalid passcode. Please try again.")
+    except KeyError as e:
+        st.sidebar.error("GeoJam API key or passcode is not configured. Contact the administrator.")
+
+# Handle Custom API Key Input
 elif api_choice == "Use my own API Key":
     api_key = st.sidebar.text_input("Enter your Google API Key:")
     if not api_key.strip():
         st.sidebar.warning("Please enter a valid API key to proceed.")
-        st.stop()
+
+# **🔍 Ensure API Key is Set**
+if not api_key:
+    st.error("⚠️ No API Key found. Please enter a valid passcode or API Key.")
+    st.stop()
 
 # Query Input
 query = st.sidebar.text_input("Enter search query (e.g., restaurants, cafes):")
 location_str = st.sidebar.text_input("Enter location (latitude,longitude):", placeholder="40.7128,-74.0060")
-radius = st.sidebar.slider("Select radius (in meters):", min_value=1, max_value=50000, value=1000, step=100)
-run_query = st.sidebar.button("Run Search")
+
+# Adjusted Radius Slider UI
+radius = st.sidebar.slider(
+    "Select radius (in meters):", 
+    min_value=1, 
+    max_value=10000, 
+    value=1000, 
+    step=100
+)
+st.sidebar.markdown(f"<p style='text-align: center; font-weight: bold;'>{radius} meters</p>", unsafe_allow_html=True)
+
+run_query = st.sidebar.button("Run Search", help="Click to start searching")
+
+# **🔍 Ensure Query & Location are Set**
+if run_query:
+    if not query.strip():
+        st.error("⚠️ Please enter a search query.")
+        st.stop()
+    if not location_str.strip():
+        st.error("⚠️ Please enter a valid location.")
+        st.stop()
 
 # Display Map
 if location_str.strip():
@@ -62,7 +111,7 @@ if location_str.strip():
         st.error("Invalid location format. Please enter as latitude,longitude.")
 
 # Fetch Data
-if run_query and location_str.strip() and query:
+if run_query:
     try:
         location = tuple(map(float, location_str.split(",")))
         endpoint = "https://maps.googleapis.com/maps/api/place/textsearch/json"
@@ -72,22 +121,20 @@ if run_query and location_str.strip() and query:
             "radius": radius,
             "key": api_key,
         }
+
         response = requests.get(endpoint, params=params)
         data = response.json()
 
         if "error_message" in data:
-            st.error(f"API Error: {data['error_message']}")
+            st.error(f"⚠️ API Error: {data['error_message']}")
             st.stop()
 
-        # Process Results
+        # Process Results (FULL RESTORE)
         results = []
         for result in data.get("results", []):
             place_id = result["place_id"]
             details_endpoint = "https://maps.googleapis.com/maps/api/place/details/json"
-            details_params = {
-                "place_id": place_id,
-                "key": api_key,
-            }
+            details_params = {"place_id": place_id, "key": api_key}
             details_response = requests.get(details_endpoint, params=details_params)
             details_data = details_response.json()
 
@@ -119,67 +166,38 @@ if run_query and location_str.strip() and query:
     except ValueError:
         st.error("Invalid location format. Please enter as latitude,longitude.")
 
-# Save as KML Function
-def save_as_kml(data, filename):
-    kml = simplekml.Kml()
-    for index, row in data.iterrows():
-        kml.newpoint(
-            name=row["Name"],
-            coords=[(row["Longitude"], row["Latitude"])],
-            description=f"""
-                <b>Address:</b> {row["Formatted Address"]}<br>
-                <b>Vicinity:</b> {row["Vicinity"]}<br>
-                <b>Rating:</b> {row["Rating"]} ({row["User Ratings Total"]} reviews)<br>
-                <b>Status:</b> {row["Status NOW"]}<br>
-                <b>Website:</b> {row["Website"]}<br>
-                <b>Phone:</b> {row["Phone"]}<br>
-            """
-        )
-    kml.save(f"{filename}.kml")
-
 # Display Results
 if st.session_state.results:
-    st.subheader("Search Results")
     results_df = pd.DataFrame(st.session_state.results)
+    st.write("### Search Results")
+    st.dataframe(results_df)
 
-    # Configure AgGrid
-    gb = GridOptionsBuilder.from_dataframe(results_df)
-    gb.configure_pagination(paginationAutoPageSize=True)
-    gb.configure_side_bar()
-    gb.configure_default_column(resizable=True, filterable=True, sortable=True)
-    grid_options = gb.build()
+    # **🔍 Ensure `filename` is defined before using it**
+    filename = st.text_input("Enter a filename for export:", "results")
 
-    AgGrid(
-        results_df,
-        gridOptions=grid_options,
-        height=300,
-        theme="streamlit",
-        enable_enterprise_modules=False,
-    )
-
-    # Save Results
-    filename = st.text_input("Enter a filename for the export (without extension):", "results")
     if st.button("Save as CSV"):
         if filename.strip():
-            csv = results_df.to_csv(index=False).encode("utf-8")
-            st.download_button(
-                label="Download CSV",
-                data=csv,
-                file_name=f"{filename.strip()}.csv",
-                mime="text/csv",
-            )
+            st.download_button("Download CSV", data=results_df.to_csv(index=False).encode("utf-8"), file_name=f"{filename}.csv", mime="text/csv")
         else:
-            st.warning("Please enter a valid filename.")
+            st.warning("⚠️ Please enter a valid filename.")
 
     if st.button("Save as KML"):
-        if filename.strip():
-            save_as_kml(results_df, filename.strip())
-            with open(f"{filename.strip()}.kml", "rb") as file:
-                st.download_button(
-                    label="Download KML",
-                    data=file,
-                    file_name=f"{filename.strip()}.kml",
-                    mime="application/vnd.google-earth.kml+xml",
+        def save_as_kml(data, filename):
+            kml = simplekml.Kml()
+            for index, row in data.iterrows():
+                kml.newpoint(
+                    name=row["Name"],
+                    coords=[(row["Longitude"], row["Latitude"])],
+                    description=f"""
+                        <b>Address:</b> {row["Formatted Address"]}<br>
+                        <b>Google URL:</b> {row["Google URL"]}<br>
+                    """
                 )
+            kml.save(f"{filename}.kml")
+
+        if filename.strip():
+            save_as_kml(results_df, filename)
+            with open(f"{filename}.kml", "rb") as file:
+                st.download_button("Download KML", data=file, file_name=f"{filename}.kml", mime="application/vnd.google-earth.kml+xml")
         else:
-            st.warning("Please enter a valid filename.")
+            st.warning("⚠️ Please enter a valid filename.")
