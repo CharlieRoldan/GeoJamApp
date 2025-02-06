@@ -1,5 +1,9 @@
 
 streamlit
+folium
+pandas
 requests
 geopy
-python-dotenv
+streamlit-folium
+st-aggrid
+simplekml
