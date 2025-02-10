@@ -29,7 +29,7 @@ stored_passcodes = secrets.get("passcodes", {})
 api_key = secrets["google"].get("api_key", None)
 
 # SIDEBAR UI
-st.sidebar.image("assets/geojamlogo.png", use_container_width=True)
+st.sidebar.image("assets/geojamlogo.png", use_column_width=True)
 st.sidebar.subheader("Enter Search Parameters")
 
 st.sidebar.markdown(
