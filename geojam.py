@@ -9,6 +9,7 @@ import time
 import simplekml
 import os
 import toml
+from geopy.distance import geodesic
 
 # Ensure session state variables
 if "results" not in st.session_state:
@@ -120,6 +121,9 @@ if location_str.strip():
         st.error("Invalid location format. Please enter as latitude,longitude.")
         st.stop()
 
+def calculate_distance(lat1, lon1, lat2, lon2):
+    return round(geodesic((lat1, lon1), (lat2, lon2)).meters, 2)  # Distance in meters
+
 # Nearby Search + Place Details
 if run_query:
     if not query.strip():
@@ -158,6 +162,8 @@ if run_query:
                 name = result.get("name", "N/A")
                 lat_ = result["geometry"]["location"]["lat"]
                 lng_ = result["geometry"]["location"]["lng"]
+                distance = calculate_distance(lat, lng, lat_, lng_)  # Calculate distance from input location
+        
                 vicinity = result.get("vicinity", "N/A")
                 open_now = None
                 if "opening_hours" in result:
@@ -252,20 +258,21 @@ if run_query:
                 # Add to results
                 st.session_state.results.append({
                     "Name": name,
+                    "Latitude": lat_,
+                    "Longitude": lng_,
+                    "Distance (m)": distance,  # Add calculated distance
+                    "Address": address,
+                    "Phone": phone,
+                    "Hours": hours_text,
                     "Vicinity": vicinity,
                     "Status (Open Now)": open_status,
                     "User Ratings Total": user_ratings_total,
                     "Price Level": price_level,
                     "Website": website,
-                    "Phone": phone,
-                    "Hours": hours_text,
                     "Wheelchair Accessible": wheelchair_accessible,
                     "Plus Code": final_plus_code,
                     "Place ID": place_id,
                     "Types": types_str,
-                    "Latitude": lat_,
-                    "Longitude": lng_,
-                    "Address": address,
                     "Google URL": google_url
                 })
 
@@ -283,6 +290,7 @@ if run_query:
 # Display the results
 if st.session_state.results:
     results_df = pd.DataFrame(st.session_state.results)
+    results_df.index = range(1, len(results_df) + 1)  # Ensure index starts from 1
     st.write("### Search Results")
     st.dataframe(results_df)
 
