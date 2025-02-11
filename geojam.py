@@ -11,18 +11,6 @@ import os
 import toml
 from geopy.distance import geodesic
 
-# Main page
-st.markdown(
-    """
-    <div style='text-align: center;'>
-        <img src='assets/instructions.png' style='max-width: 100%; height: auto;' />
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-
-
 # Ensure session state variables
 if "results" not in st.session_state:
     st.session_state.results = []
