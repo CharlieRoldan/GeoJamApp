@@ -15,7 +15,7 @@ from geopy.distance import geodesic
 st.markdown(
     """
     <div style='text-align: center;'>
-        <img src='assets/instructions.png' style='max-width: 50%; height: auto;' />
+        <img src='assets/instructions.png' style='max-width: 100%; height: auto;' />
     </div>
     """,
     unsafe_allow_html=True
