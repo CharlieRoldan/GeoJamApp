@@ -11,6 +11,10 @@ import os
 import toml
 from geopy.distance import geodesic
 
+# Main page
+st.image("assets/instructions.png", width=900)  # Adjust width as needed
+
+
 # Ensure session state variables
 if "results" not in st.session_state:
     st.session_state.results = []
