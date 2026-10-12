@@ -1,6 +1,10 @@
 import streamlit as st
 st.set_page_config(layout="wide")
 
+# Service paused by the owner. Stop before credentials, search, or exports.
+st.info("GeoJam is temporarily paused.")
+st.stop()
+
 import pandas as pd
 import folium
 from streamlit_folium import st_folium
